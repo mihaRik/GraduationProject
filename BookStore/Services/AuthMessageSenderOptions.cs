@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 namespace BookStore.Models
 {
-    public class Book
+    public class AuthMessageSenderOptions
     {
+        public string SendGridUser { get; set; }
+        public string SendGridKey { get; set; }
     }
 }
