@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStore.Migrations
 {
     [DbContext(typeof(BookContext))]
-    [Migration("20190413173557_InitialCreate")]
+    [Migration("20190425174356_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,6 +81,153 @@ namespace BookStore.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("BookStore.Models.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("Fullname")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.Property<DateTime>("ModifiedAt");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Authors");
+                });
+
+            modelBuilder.Entity("BookStore.Models.Book", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("GID")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Image")
+                        .HasMaxLength(300);
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasMaxLength(10);
+
+                    b.Property<DateTime>("ModifiedAt");
+
+                    b.Property<int>("PageCount");
+
+                    b.Property<DateTime>("PublishedDate");
+
+                    b.Property<string>("Publisher")
+                        .HasMaxLength(150);
+
+                    b.Property<string>("Subtitle")
+                        .HasMaxLength(200);
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("BookStore.Models.BookAuthorPivot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AuthorId");
+
+                    b.Property<int>("BookId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("BookAuthors");
+                });
+
+            modelBuilder.Entity("BookStore.Models.BookCategoryPivot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BookId");
+
+                    b.Property<int>("CategoryId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("BookCategories");
+                });
+
+            modelBuilder.Entity("BookStore.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<DateTime>("ModifiedAt");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("BookStore.Models.Images", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BookId");
+
+                    b.Property<string>("ExtraLarge")
+                        .HasMaxLength(300);
+
+                    b.Property<string>("Large")
+                        .HasMaxLength(300);
+
+                    b.Property<string>("Meddium")
+                        .HasMaxLength(300);
+
+                    b.Property<string>("SmallThumbnail")
+                        .HasMaxLength(300);
+
+                    b.Property<string>("Thumbnail")
+                        .HasMaxLength(300);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId")
+                        .IsUnique();
+
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -196,6 +343,40 @@ namespace BookStore.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("BookStore.Models.BookAuthorPivot", b =>
+                {
+                    b.HasOne("BookStore.Models.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("BookStore.Models.Book", "Book")
+                        .WithMany("Authors")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("BookStore.Models.BookCategoryPivot", b =>
+                {
+                    b.HasOne("BookStore.Models.Book", "Book")
+                        .WithMany("Categories")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("BookStore.Models.Category", "Category")
+                        .WithMany("Books")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("BookStore.Models.Images", b =>
+                {
+                    b.HasOne("BookStore.Models.Book", "Book")
+                        .WithOne("Images")
+                        .HasForeignKey("BookStore.Models.Images", "BookId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

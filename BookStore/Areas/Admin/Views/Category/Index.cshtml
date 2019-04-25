@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Category>
+@{
+    ViewData["Title"] = "Category";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section styles{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+}
+
+<h2>Category</h2>
+
+<a asp-area="Admin" asp-controller="Category" asp-action="Create">Add new one category</a>
+
+<table id="categories">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Create date</th>
+            <th>Modify date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cat in Model)
+        {
+        <tr>
+            <td>@cat.Name</td>
+            <td>@cat.CreatedAt</td>
+            <td>@cat.ModifiedAt</td>
+            <td>
+                <a asp-area="Admin" asp-controller="Category" asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-outline-info">Edit</a>
+                <a asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-id="@cat.Id" class="btn btn-outline-danger">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#categories").DataTable();
+        })
+    </script>
+}

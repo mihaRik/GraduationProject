@@ -1,0 +1,28 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Add category";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Add new category</h2>
+
+<div class="row">
+    <div class="col-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input type="text" asp-for="Name" required class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <input type="submit" value="Add" class="btn btn-outline-success" />
+            <a asp-area="Admin" asp-controller="Category" asp-action="Index" class="btn btn-outline-primary">Back to the menu</a>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

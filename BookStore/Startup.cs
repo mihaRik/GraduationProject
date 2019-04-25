@@ -29,9 +29,9 @@ namespace BookStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BookContext>(o =>
+            services.AddDbContext<BookContext>(otption =>
             {
-                o.UseSqlServer(Configuration["Data:ConnectionStrings:Default"]);
+                otption.UseSqlServer(Configuration["Data:ConnectionStrings:Default"]);
             });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -47,6 +47,8 @@ namespace BookStore
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
+
+            services.AddSingleton(Configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -68,6 +70,13 @@ namespace BookStore
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "area",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+            });
 
             app.UseMvc(routes =>
             {

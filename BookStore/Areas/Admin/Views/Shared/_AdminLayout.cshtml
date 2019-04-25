@@ -1,9 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BookStore</title>
+    <title>@ViewData["Title"] - Admin panel</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -15,41 +19,34 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    @RenderSection("styles", false)
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" asp-controller="Home" asp-action="Index">Book store</a>
+        <a class="navbar-brand" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Book store</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item active">
-                    <a class="nav-link" asp-controller="Home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
+                <li class="nav-item @(Url.ActionContext.HttpContext.Request.Path.Value.ToLower().Contains("book") ? "active" : null)">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Book" asp-action="Index">Book <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
+                <li class="nav-item @(Url.ActionContext.HttpContext.Request.Path.Value.ToLower().Contains("category") ? "active" : null)">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="Index">Category <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
+                <li class="nav-item @(Url.ActionContext.HttpContext.Request.Path.Value.ToLower().Contains("author") ? "active" : null)">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Author" asp-action="Index">Author <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <li class="nav-item"><a asp-controller="Account" asp-action="Details" class="nav-link">Hello, @User.Identity.Name</a></li>
-                    <li class="nav-item">
-                        <form action="/Account/Logout" method="post">
-                            <input type="submit" value="Logout" class="nav-link"  style="background: transparent; border: none;"/>
-                        </form>
-                    </li>
-                }
-                else
-                {
-                    <li class="nav-item"><a asp-controller="Account" asp-action="Login" class="nav-link">Login</a></li>
-                    <li class="nav-item"><a asp-controller="Account" asp-action="Register" class="nav-link">Register</a></li>
-                }
+                <li class="nav-item"><a asp-controller="Account" asp-action="Details" class="nav-link">Hello, @User.Identity.Name</a></li>
+                <li class="nav-item">
+                    <form action="/Account/Logout" method="post">
+                        <input type="submit" value="Logout" class="nav-link" style="background: transparent; border: none;" />
+                    </form>
+                </li>
             </ul>
         </div>
     </nav>
@@ -87,3 +84,4 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+

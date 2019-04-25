@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Author>
+@{
+    ViewData["Title"] = "Authors";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+}
+
+<h2>Authors</h2>
+
+<a asp-area="Admin" asp-controller="Author" asp-action="Create">Add new one author</a>
+
+<table id="authors">
+    <thead>
+        <tr>
+            <th>Fullname</th>
+            <th>Create date</th>
+            <th>Modified date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var author in Model)
+        {
+            <tr>
+                <td>@author.Fullname</td>
+                <td>@author.CreatedAt</td>
+                <td>@author.ModifiedAt</td>
+                <td>
+                    <a asp-area="Admin" asp-controller="Author" asp-action="Edit" asp-route-id="@author.Id" class="btn btn-outline-info">Edit</a>
+                    <a asp-area="Admin" asp-controller="Author" asp-action="Delete" asp-route-id="@author.Id" class="btn btn-outline-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#authors").DataTable();
+        })
+    </script>
+}

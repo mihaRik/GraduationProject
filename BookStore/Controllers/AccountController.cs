@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using BookStore.Data;
 using BookStore.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +16,7 @@ namespace BookStore.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
 
         public AccountController(UserManager<ApplicationUser> userManager,
@@ -23,6 +26,27 @@ namespace BookStore.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginModel loginModel, string ReturnUrl = "/")
+        {
+            if (!ModelState.IsValid) return View(loginModel);
+
+            var result = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, loginModel.RemmemberMe, true);
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Email or passwords are wrong!");
+                return View(loginModel);
+            }
+
+            return Redirect(ReturnUrl);
         }
 
         public IActionResult Register()
@@ -54,6 +78,8 @@ namespace BookStore.Controllers
                 return View(registerModel);
             }
 
+            await _userManager.AddToRoleAsync(user, Roles.Member);
+
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
             var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, code }, Request.Scheme);
@@ -61,12 +87,20 @@ namespace BookStore.Controllers
             await _emailSender.SendEmailAsync(registerModel.Email, "Agilli ol emaili-vu tesdiqle",
                 $"Bax bura bas ==> <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>buraaaaaaaaaaaaa</a>.");
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(ConfirmInfo));
+        }
+
+        public IActionResult ConfirmInfo()
+        {
+            return View();
         }
 
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
             var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null) return NotFound();
+
             var result = await _userManager.ConfirmEmailAsync(user, code);
 
             if (!result.Succeeded)
@@ -81,6 +115,18 @@ namespace BookStore.Controllers
 
             await _signInManager.SignInAsync(user, true);
 
+            return View();
+        }
+
+        [HttpPost, Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult AccessDenied()
+        {
             return View();
         }
     }

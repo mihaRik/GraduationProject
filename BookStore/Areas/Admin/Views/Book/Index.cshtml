@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Books";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles{
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+}
+
+<h2>Books</h2>
+
+<a asp-area="Admin" asp-controller="Book" asp-action="Create">Add new one book</a>
+
+<table id="books">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Authors</th>
+            <th>Categories</th>
+            <th>Description</th>
+            <th>Publisher</th>
+            <th>Language</th>
+            <th>Page count</th>
+            <th>Published date</th>
+            <th>Image</th>
+        </tr>
+    </thead>
+</table>
+
+@section scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#books").DataTable({
+                serverSide: true,
+                processing: true,
+                ajax: "/Admin/Book/GetBooks?search=" + $("#books_filter input").val(),
+                ordering: false,
+                searching: true
+            });
+        })
+    </script>
+}

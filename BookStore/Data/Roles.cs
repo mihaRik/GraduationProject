@@ -7,18 +7,8 @@ namespace BookStore.Data
 {
     public static class Roles
     {
-        private const string admin = "Admin";
+        public const string Admin = "Admin";
 
-        public static string Admin
-        {
-            get { return admin; }
-        }
-
-        private const string member = "Member";
-
-        public static string Member
-        {
-            get { return member; }
-        }
+        public const string Member = "Member";
     }
 }

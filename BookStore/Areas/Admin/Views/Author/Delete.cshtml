@@ -1,0 +1,23 @@
+﻿@model Author
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Delete author</h2>
+
+<div class="row">
+    <div class="col-4">
+        <form method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label asp-for="Fullname"></label>
+                <input type="text" asp-for="Fullname" disabled class="form-control" />
+            </div>
+
+            <input type="submit" value="Delete" class="btn btn-outline-danger" />
+            <a asp-area="Admin" asp-controller="Author" asp-action="Index" class="btn btn-outline-primary">Back to the menu</a>
+        </form>
+    </div>
+</div>
