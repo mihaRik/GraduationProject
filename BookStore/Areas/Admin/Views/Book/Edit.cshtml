@@ -1,0 +1,117 @@
+﻿@model BookStore.Models.ViewModels.BookEditViewModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+}
+<h2>Edit the book</h2>
+
+<div class="row">
+    <div class="col-12">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Book.Title"></label><span class="text-danger"> *</span>
+                <input type="text" asp-for="Book.Title" class="form-control" />
+                <span asp-validation-for="Book.Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Book.Subtitle"></label>
+                <input type="text" asp-for="Book.Subtitle" class="form-control" />
+                <span asp-validation-for="Book.Subtitle" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Book.Categories"></label><span class="text-danger"> *</span>
+                <input type="text" placeholder="Search for categories" id="catSearch" class="float-right form-control" style="width: 200px;" />
+                <button type="button" class="btn btn-primary float-right mr-5" id="add-new-category">Add new category</button>
+                <div id="category-partial">
+                    <partial name="_CategoriesEditPartial" model="Model" />
+                </div>
+                <span asp-validation-for="Book.Categories" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Book.Authors"></label><span class="text-danger"> *</span>
+                <input type="text" placeholder="Search for authors" id="authorsSearch" class="float-right form-control" style="width: 200px;" />
+                <button type="button" class="btn btn-primary float-right mr-5" id="add-new-category">Add new author</button>
+                <div id="author-partial">
+                    <partial name="_AuthorsEditPartial" model="Model" />
+                </div>
+                <span asp-validation-for="Book.Authors" class="text-danger"></span>
+            </div>
+
+            <input type="submit" value="Edit" class="btn btn-outline-success" />
+            <a asp-area="Admin" asp-controller="Book" asp-action="Index" class="btn btn-outline-primary">Back to the menu</a>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(document).on("keyup", "#catSearch", function () {
+                searchHelper(".categories-search", $(this).val());
+            })
+
+            $(document).on("keyup", "#authorSearch", function () {
+                searchHelper(".authors-search", $(this).val());
+            })
+
+            function searchHelper(listSelector, searchString) {
+                console.log($(listSelector));
+                for (const elem of $(listSelector)) {
+                    if ($(elem).children("label").text().toLowerCase().includes(searchString.toLowerCase())) {
+                        $(elem).show();
+                    } else {
+                        $(elem).hide();
+                    }
+                }
+            }
+
+            $("#publishedDate").datepicker();
+
+            $(document).on("click", "#add-new-category", function () {
+                swal({
+                    title: "Add new category.",
+                    text: "You can immedetaly add new category here.",
+                    icon: "info",
+                    content: "input",
+                    buttons: ["Cancel", "Add"],
+                    dangerMode: false
+                })
+                    .then((category) => {
+                        if (!category) throw null;
+
+                        $.ajax({
+                            url: "/admin/category/createasync",
+                            data: { category: category },
+                            success: function (res) {
+                                swal(res.data, { icon: res.icon });
+
+                                $.ajax({
+                                    url: "/admin/category/getcategoriesasync",
+                                    success: function (res) {
+                                        $("#category-partial").html(res);
+                                    }
+                                })
+                            }
+                        })
+                    })
+                    .catch(err => {
+                        if (err) swal("Something goes wrong", { icon: "error" })
+                        else swal.close();
+                    })
+            })
+        })
+    </script>
+}

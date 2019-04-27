@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookStore.Data;
 using BookStore.Models;
+using BookStore.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace BookStore.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            return View(_db.Categories);
+            return View(_db.Categories.OrderByDescending(c => c.CreatedAt));
         }
 
         public IActionResult Create()
@@ -44,6 +45,34 @@ namespace BookStore.Areas.Admin.Controllers
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> CreateAsync(string category)
+        {
+            var result = new
+            {
+                data = "This category already exists.",
+                icon = "error"
+            };
+
+            if (!await _db.Categories.AnyAsync(c => c.Name == category))
+            {
+                await _db.Categories.AddAsync(new Category
+                {
+                    Name = category,
+                    CreatedAt = DateTime.Now,
+                    ModifiedAt = DateTime.Now
+                });
+                await _db.SaveChangesAsync();
+
+                result = new
+                {
+                    data = "Category successfully added!",
+                    icon = "success"
+                };
+            }
+
+            return Json(result);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -83,7 +112,7 @@ namespace BookStore.Areas.Admin.Controllers
             return View(cat);
         }
 
-        [HttpPost]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             var cat = await _db.Categories.FindAsync(id);
@@ -94,6 +123,25 @@ namespace BookStore.Areas.Admin.Controllers
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> GetCategoriesAsync(int? bookId)
+        {
+            if (bookId == null)
+            {
+                return PartialView("_CategoriesCreatePartial", _db.Categories);
+            }
+            else
+            {
+                var book = await _db.Books.FindAsync(bookId);
+                var model = new BookEditViewModel
+                {
+                    Categories = _db.Categories,
+                    CategoriesId = book.Categories.Select(c => c.CategoryId)
+                };
+
+                return PartialView("_CategoriesEditPartial", model);
+            }
         }
     }
 }

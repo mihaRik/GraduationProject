@@ -4,8 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using BookStore.Data;
 using Google.Apis.Books.v1.Data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookStore.Models
 {
@@ -30,6 +32,7 @@ namespace BookStore.Models
 
         public string Description { get; set; }
 
+        [Display(Name = "Page count")]
         public int PageCount { get; set; }
 
         [Required, StringLength(10)]
@@ -59,6 +62,7 @@ namespace BookStore.Models
         [StringLength(150)]
         public string Publisher { get; set; }
 
+        [Display(Name = "Published date")]
         public DateTime PublishedDate { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -69,10 +73,7 @@ namespace BookStore.Models
 
         public virtual ICollection<BookAuthorPivot> Authors { get; set; }
 
-        [StringLength(300)]
-        public string Image { get; set; }
-
         [NotMapped]
-        public IFormFile Photo { get; set; }
+        public IFormFileCollection Photos { get; set; }
     }
 }

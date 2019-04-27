@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Author>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div class="d-flex flex-column flex-wrap mt-3" style="height: 300px; overflow-x: scroll;">
+    @foreach (var author in Model)
+    {
+        <div class="authors-search">
+            <input type="checkbox" value="@author.Id" name="authors" id="chbAuthor-@author.Id" />
+            <label for="chbAuthor-@author.Id">@author.Fullname</label>
+        </div>
+    }
+</div>

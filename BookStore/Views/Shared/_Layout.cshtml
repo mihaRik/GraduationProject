@@ -25,6 +25,12 @@
 
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item active">
+                        <a class="nav-link text-warning" href="/admin/dashboard/index">Admin Panel <span class="sr-only">(current)</span></a>
+                    </li>
+                }
                 <li class="nav-item active">
                     <a class="nav-link" asp-controller="Home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
                 </li>

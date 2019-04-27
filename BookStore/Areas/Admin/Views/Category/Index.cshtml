@@ -28,8 +28,8 @@
             <td>@cat.CreatedAt</td>
             <td>@cat.ModifiedAt</td>
             <td>
-                <a asp-area="Admin" asp-controller="Category" asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-outline-info">Edit</a>
-                <a asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-id="@cat.Id" class="btn btn-outline-danger">Delete</a>
+                <a asp-area="Admin" asp-controller="Category" asp-action="Edit" asp-route-id="@cat.Id" class="btn btn-outline-info"><i class='far fa-edit'></i></a>
+                <a asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-id="@cat.Id" class="btn btn-outline-danger"><i class='far fa-trash-alt'></i></a>
             </td>
         </tr>
         }

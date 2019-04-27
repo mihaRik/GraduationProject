@@ -21,8 +21,8 @@
             <th>Publisher</th>
             <th>Language</th>
             <th>Page count</th>
-            <th>Published date</th>
             <th>Image</th>
+            <th></th>
         </tr>
     </thead>
 </table>
@@ -34,9 +34,8 @@
             $("#books").DataTable({
                 serverSide: true,
                 processing: true,
-                ajax: "/Admin/Book/GetBooks?search=" + $("#books_filter input").val(),
-                ordering: false,
-                searching: true
+                ajax: "/Admin/Book/GetBooks",
+                ordering: false
             });
         })
     </script>

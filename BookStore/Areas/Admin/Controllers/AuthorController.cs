@@ -23,7 +23,7 @@ namespace BookStore.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
-            return View(_db.Authors);
+            return View(_db.Authors.OrderByDescending(a => a.CreatedAt));
         }
 
         public IActionResult Create()
@@ -43,6 +43,34 @@ namespace BookStore.Areas.Admin.Controllers
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> CreateAsync(string author)
+        {
+            var result = new
+            {
+                data = "This author already exists in system.",
+                icon = "error"
+            };
+
+            if (!await _db.Authors.AnyAsync(a => a.Fullname == author))
+            {
+                await _db.Authors.AddAsync(new Author
+                {
+                    Fullname = author,
+                    CreatedAt = DateTime.Now,
+                    ModifiedAt = DateTime.Now
+                });
+                await _db.SaveChangesAsync();
+
+                result = new
+                {
+                    data = "Author successefully added.",
+                    icon = "success"
+                };
+            }
+
+            return Json(result);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -94,6 +122,18 @@ namespace BookStore.Areas.Admin.Controllers
             await _db.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> GetAuthorsAsync(int? authorId)
+        {
+            if (authorId == null)
+            {
+                return PartialView("_AuthorsCreatePartial", _db.Authors);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
