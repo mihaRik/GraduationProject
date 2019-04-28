@@ -20,7 +20,7 @@ namespace BookStore.Extensions
         public async static Task<string> SavePhotoAsync(this IFormFile photo, string root, string path)
         {
             var fileName = Path.Combine("/images", path, Guid.NewGuid().ToString() + Path.GetFileName(photo.FileName));
-            var fileFullPath = Path.Combine(root, "images", fileName);
+            var fileFullPath = root + @"\" + fileName;
 
             using (var stream = new FileStream(fileFullPath, FileMode.Create))
             {

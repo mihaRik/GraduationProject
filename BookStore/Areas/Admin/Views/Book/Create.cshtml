@@ -1,4 +1,4 @@
-﻿@model BookStore.Models.ViewModels.BookCreateViewModel
+﻿@model BookStore.Models.ViewModels.BookViewModel
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -32,7 +32,7 @@
                 <input type="text" placeholder="Search for categories" id="catSearch" class="float-right form-control" style="width: 200px;" />
                 <button type="button" class="btn btn-primary float-right mr-5" id="add-new-category">Add new category</button>
                 <div id="category-partial">
-                    <partial name="_CategoriesCreatePartial" model="Model.Categories" />
+                    <partial name="_CategoriesPartial" model="Model" />
                 </div>
                 <span asp-validation-for="Book.Categories" class="text-danger"></span>
             </div>
@@ -42,14 +42,14 @@
                 <input type="text" placeholder="Search for authors" id="authorSearch" class="float-right form-control" style="width: 200px;" />
                 <button type="button" class="btn btn-primary float-right mr-5" id="add-new-author">Add new author</button>
                 <div id="author-partial">
-                    <partial name="_AuthorsCreatePartial" model="Model.Authors" />
+                    <partial name="_AuthorsPartial" model="Model" />
                 </div>
                 <span asp-validation-for="Book.Authors" class="text-danger"></span>
             </div>
 
             <div class="form-group w-50">
                 <label asp-for="Book.Description"></label>
-                <textarea asp-for="Book.Description" class="form-control"></textarea>
+                <textarea asp-for="Book.Description" rows="10"  class="form-control"></textarea>
                 <span asp-validation-for="Book.Description" class="text-danger"></span>
             </div>
 
@@ -119,7 +119,7 @@
             $(document).on("click", "#add-new-category", function () {
                 swal({
                     title: "Add new category.",
-                    text: "You can immediately add new category here.",
+                    text: "Please enter category name.",
                     icon: "info",
                     content: "input",
                     buttons: ["Cancel", "Add"],
@@ -152,7 +152,7 @@
             $(document).on("click", "#add-new-author", function () {
                 swal({
                     title: "Add new author.",
-                    text: "You can immediately add new author here.",
+                    text: "Please enter author's fullname.",
                     icon: "info",
                     content: "input",
                     buttons: ["Cancel", "Add"]

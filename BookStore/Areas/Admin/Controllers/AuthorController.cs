@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookStore.Data;
 using BookStore.Models;
+using BookStore.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -124,16 +125,21 @@ namespace BookStore.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> GetAuthorsAsync(int? authorId)
+        public async Task<IActionResult> GetAuthorsAsync(int? bookId)
         {
-            if (authorId == null)
+            var model = new BookViewModel
             {
-                return PartialView("_AuthorsCreatePartial", _db.Authors);
-            }
-            else
+                Authors = _db.Authors,
+                AuthorsId = new int[0]
+            };
+
+            if (bookId != null)
             {
-                return null;
+                var book = await _db.Books.FindAsync(bookId);
+                model.AuthorsId = book.Authors.Select(a => a.AuthorId);
             }
+
+            return PartialView("_AuthorsPartial", model);
         }
     }
 }

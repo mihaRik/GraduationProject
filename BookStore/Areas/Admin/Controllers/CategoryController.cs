@@ -127,21 +127,20 @@ namespace BookStore.Areas.Admin.Controllers
 
         public async Task<IActionResult> GetCategoriesAsync(int? bookId)
         {
-            if (bookId == null)
+            var model = new BookViewModel
             {
-                return PartialView("_CategoriesCreatePartial", _db.Categories);
-            }
-            else
+                Categories = _db.Categories,
+                CategoriesId = new int[0]
+            };
+
+            if (bookId != null)
             {
                 var book = await _db.Books.FindAsync(bookId);
-                var model = new BookEditViewModel
-                {
-                    Categories = _db.Categories,
-                    CategoriesId = book.Categories.Select(c => c.CategoryId)
-                };
 
-                return PartialView("_CategoriesEditPartial", model);
+                model.CategoriesId = book.Categories.Select(c => c.CategoryId);
             }
+
+            return PartialView("_CategoriesPartial", model);
         }
     }
 }

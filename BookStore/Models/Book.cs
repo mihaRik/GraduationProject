@@ -17,6 +17,7 @@ namespace BookStore.Models
         {
             Categories = new HashSet<BookCategoryPivot>();
             Authors = new HashSet<BookAuthorPivot>();
+            Images = new HashSet<Image>();
         }
 
         public int Id { get; set; }
@@ -38,24 +39,16 @@ namespace BookStore.Models
         [Required, StringLength(10)]
         public string Language { get; set; }
 
-        public virtual Images Images { get; set; }
-
         public string DefaultImage
         {
             get
             {
-                if (Images != null)
+                foreach (var image in Images)
                 {
-                    return Images.ExtraLarge ??
-                           Images.Large ??
-                           Images.Meddium ??
-                           Images.SmallThumbnail ??
-                           Images.Thumbnail;
+                    if (!string.IsNullOrEmpty(image.ImageUrl)) return image.ImageUrl;
                 }
-                else
-                {
-                    return "img/no-image.png";
-                }
+
+                return "img/no-image.png";
             }
         }
 
@@ -68,6 +61,8 @@ namespace BookStore.Models
         public DateTime CreatedAt { get; set; }
 
         public DateTime ModifiedAt { get; set; }
+
+        public virtual ICollection<Image> Images { get; set; }
 
         public virtual ICollection<BookCategoryPivot> Categories { get; set; }
 

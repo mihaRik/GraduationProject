@@ -168,14 +168,14 @@ namespace BookStore.Controllers
                                 publishdate = DateTime.Now;
                             }
 
-                            var images = new Images
-                            {
-                                ExtraLarge = volume.ImageLinks.ExtraLarge,
-                                Large = volume.ImageLinks.Large,
-                                Meddium = volume.ImageLinks.Medium,
-                                SmallThumbnail = volume.ImageLinks.SmallThumbnail,
-                                Thumbnail = volume.ImageLinks.Thumbnail
-                            };
+                            //var images = new Image
+                            //{
+                            //    ExtraLarge = volume.ImageLinks.ExtraLarge,
+                            //    Large = volume.ImageLinks.Large,
+                            //    Meddium = volume.ImageLinks.Medium,
+                            //    SmallThumbnail = volume.ImageLinks.SmallThumbnail,
+                            //    Thumbnail = volume.ImageLinks.Thumbnail
+                            //};
 
                             var book = new Book
                             {
@@ -189,7 +189,7 @@ namespace BookStore.Controllers
                                 PageCount = volume.PageCount ?? 100,
                                 PublishedDate = publishdate,
                                 Publisher = volume.Publisher,
-                                Images = images
+                                //Images = images
                             };
                             await _db.Books.AddAsync(book);
                             await _db.SaveChangesAsync();

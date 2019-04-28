@@ -1,4 +1,4 @@
-﻿@model BookStore.Models.ViewModels.BookEditViewModel
+﻿@model BookStore.Models.ViewModels.BookViewModel
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
@@ -6,21 +6,45 @@
 
 @section styles{
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+        .overlay {
+            opacity: 0;
+            transition: all .3s ease-in-out;
+            background: rgba(0,0,0,.5);
+            border-radius: 5px;
+        }
+
+            .overlay i {
+                font-size: 60px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                cursor: pointer;
+            }
+
+        .img-container:hover .overlay {
+            display: block;
+            opacity: 1;
+        }
+    </style>
 }
 <h2>Edit the book</h2>
 
 <div class="row">
     <div class="col-12">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
+            <input type="hidden" asp-for="Book.Id" />
+
+            <div class="form-group w-50">
                 <label asp-for="Book.Title"></label><span class="text-danger"> *</span>
                 <input type="text" asp-for="Book.Title" class="form-control" />
                 <span asp-validation-for="Book.Title" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group w-50">
                 <label asp-for="Book.Subtitle"></label>
                 <input type="text" asp-for="Book.Subtitle" class="form-control" />
                 <span asp-validation-for="Book.Subtitle" class="text-danger"></span>
@@ -31,7 +55,7 @@
                 <input type="text" placeholder="Search for categories" id="catSearch" class="float-right form-control" style="width: 200px;" />
                 <button type="button" class="btn btn-primary float-right mr-5" id="add-new-category">Add new category</button>
                 <div id="category-partial">
-                    <partial name="_CategoriesEditPartial" model="Model" />
+                    <partial name="_CategoriesPartial" model="Model" />
                 </div>
                 <span asp-validation-for="Book.Categories" class="text-danger"></span>
             </div>
@@ -39,15 +63,68 @@
 
             <div class="form-group">
                 <label asp-for="Book.Authors"></label><span class="text-danger"> *</span>
-                <input type="text" placeholder="Search for authors" id="authorsSearch" class="float-right form-control" style="width: 200px;" />
-                <button type="button" class="btn btn-primary float-right mr-5" id="add-new-category">Add new author</button>
+                <input type="text" placeholder="Search for authors" id="authorSearch" class="float-right form-control" style="width: 200px;" />
+                <button type="button" class="btn btn-primary float-right mr-5" id="add-new-author">Add new author</button>
                 <div id="author-partial">
-                    <partial name="_AuthorsEditPartial" model="Model" />
+                    <partial name="_AuthorsPartial" model="Model" />
                 </div>
                 <span asp-validation-for="Book.Authors" class="text-danger"></span>
             </div>
 
-            <input type="submit" value="Edit" class="btn btn-outline-success" />
+            <div class="form-group w-50">
+                <label asp-for="Book.Description"></label>
+                <textarea asp-for="Book.Description" rows="10" class="form-control"></textarea>
+                <span asp-validation-for="Book.Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group w-50">
+                <label asp-for="Book.Language"></label><span class="text-danger"> *</span>
+                <input type="text" asp-for="Book.Language" class="form-control" required />
+                <span asp-validation-for="Book.Language" class="text-danger"></span>
+            </div>
+
+            <div class="form-group w-50">
+                <label asp-for="Book.Publisher"></label><span class="text-danger"> *</span>
+                <input type="text" asp-for="Book.Publisher" class="form-control" required />
+                <span asp-validation-for="Book.Publisher" class="text-danger"></span>
+            </div>
+
+            <div class="form-group w-50">
+                <label asp-for="Book.PublishedDate"></label><span class="text-danger"> *</span>
+                <input type="datetime" asp-for="Book.PublishedDate" required class="form-control" id="publishedDate" />
+                <span asp-validation-for="Book.PublishedDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group w-50">
+                <label asp-for="Book.PageCount"></label><span class="text-danger"> *</span>
+                <input type="number" asp-for="Book.PageCount" class="form-control" required />
+                <span asp-validation-for="Book.PageCount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Images</label>
+                <div class=" d-flex justify-content-between">
+                    @foreach (var image in Model.Book.Images)
+                    {
+                        <div class="img-container" style="width: 200px;">
+                            <div class="position-relative">
+                                <div class="overlay w-100 h-100 position-absolute">
+                                    <i class="far fa-trash-alt text-danger"></i>
+                                </div>
+                                <img src="@image.ImageUrl" data-id="@image.Id" style="object-fit: contain; width: 100%;"
+                                     class="img-thumbnail" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group w-50">
+                <label asp-for="Book.Photos"></label>
+                <input type="file" asp-for="Book.Photos" multiple accept="image/*" class="form-control" />
+            </div>
+
+            <input type="submit" value="Submit" class="btn btn-outline-success" />
             <a asp-area="Admin" asp-controller="Book" asp-action="Index" class="btn btn-outline-primary">Back to the menu</a>
         </form>
     </div>
@@ -80,10 +157,11 @@
 
             $("#publishedDate").datepicker();
 
+            //add new category modal
             $(document).on("click", "#add-new-category", function () {
                 swal({
                     title: "Add new category.",
-                    text: "You can immedetaly add new category here.",
+                    text: "Please enter category name.",
                     icon: "info",
                     content: "input",
                     buttons: ["Cancel", "Add"],
@@ -100,6 +178,7 @@
 
                                 $.ajax({
                                     url: "/admin/category/getcategoriesasync",
+                                    data: {bookId: @Model.Book.Id},
                                     success: function (res) {
                                         $("#category-partial").html(res);
                                     }
@@ -110,6 +189,61 @@
                     .catch(err => {
                         if (err) swal("Something goes wrong", { icon: "error" })
                         else swal.close();
+                    })
+            })
+
+            //add new author modal
+            $(document).on("click", "#add-new-author", function () {
+                swal({
+                    title: "Add new author.",
+                    text: "Please enter author's fullname.",
+                    icon: "info",
+                    content: "input",
+                    buttons: ["Cancel", "Add"]
+                })
+                    .then((author) => {
+                        if (!author) throw null;
+
+                        $.ajax({
+                            url: "/admin/author/createasync",
+                            data: {
+                                author: author
+                            },
+                            success: function (res) {
+                                swal(res.data, { icon: res.icon });
+                                $.ajax({
+                                    url: "/admin/author/getauthorsasync",
+                                    data: {bookId: @Model.Book.Id},
+                                    success: function (res) {
+                                        $("#author-partial").html(res);
+                                    }
+                                })
+                            }
+                        })
+                    })
+            })
+
+            //delete image modal
+            $(document).on("click", ".img-container i", function () {
+                var icon = $(this);
+                swal({
+                    title: "Do you want delete this image?",
+                    text: "You can't restore this image further.",
+                    icon: $(this).parent().next().attr("src"),
+                    dangerMode: true,
+                    buttons: ["Cancel", "Delete"]
+                })
+                    .then(willDelete => {
+                        if (willDelete) {
+                            $.ajax({
+                                url: "/admin/book/deleteimage",
+                                data: { imageId: $(this).parent().next().data("id") },
+                                success: function (res) {
+                                    icon.parent().parent().parent().remove();
+                                    swal(res.data, "", { icon: res.icon });
+                                }
+                            })
+                        }
                     })
             })
         })

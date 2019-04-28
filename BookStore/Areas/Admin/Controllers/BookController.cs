@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using static BookStore.Utility.DeleteFile;
 
 namespace BookStore.Areas.Admin.Controllers
 {
@@ -59,7 +60,7 @@ namespace BookStore.Areas.Admin.Controllers
                     b.Publisher,
                     b.Language,
                     b.PageCount,
-                    $"<img src='{b.Images.Thumbnail ?? "/images/no-image.png"}' class='img-thumbnail' />",
+                    $"<img src='{b.Images.ToList()[0].ImageUrl}' class='img-thumbnail' />",
                     $"<a href='/admin/book/edit/{b.Id}' class='btn btn-outline-info'><i class='far fa-edit'></i></a>" +
                     $"<a href='/admin/book/delete/{b.Id}' class='btn btn-outline-danger'><i class='far fa-trash-alt'></i></a>"
                 })
@@ -70,25 +71,36 @@ namespace BookStore.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            var model = new BookCreateViewModel
+            var model = new BookViewModel
             {
                 Categories = _db.Categories,
-                Authors = _db.Authors
+                Authors = _db.Authors,
+                CategoriesId = new int[0],
+                AuthorsId = new int[0]
             };
 
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BookCreateViewModel viewModel, int[] categories, int[] authors)
+        public async Task<IActionResult> Create(BookViewModel viewModel, int[] categories, int[] authors)
         {
-            if (!ModelState.IsValid) return View(viewModel);
+            if (!ModelState.IsValid)
+            {
+                viewModel.Categories = _db.Categories;
+                viewModel.Authors = _db.Authors;
+                viewModel.CategoriesId = categories;
+                viewModel.AuthorsId = authors;
+                return View(viewModel);
+            }
 
             if (categories.Length == 0 || authors.Length == 0)
             {
                 ModelState.AddModelError("", "Minimum one category and author are required.");
                 viewModel.Categories = _db.Categories;
                 viewModel.Authors = _db.Authors;
+                viewModel.CategoriesId = categories;
+                viewModel.AuthorsId = authors;
                 return View(viewModel);
             }
 
@@ -97,6 +109,8 @@ namespace BookStore.Areas.Admin.Controllers
                 ModelState.AddModelError("", "Maximum 5 images can be added.");
                 viewModel.Categories = _db.Categories;
                 viewModel.Authors = _db.Authors;
+                viewModel.CategoriesId = categories;
+                viewModel.AuthorsId = authors;
                 return View(viewModel);
             }
 
@@ -107,6 +121,8 @@ namespace BookStore.Areas.Admin.Controllers
                     ModelState.AddModelError("", "Files must be images.");
                     viewModel.Categories = _db.Categories;
                     viewModel.Authors = _db.Authors;
+                    viewModel.CategoriesId = categories;
+                    viewModel.AuthorsId = authors;
                     return View(viewModel);
                 }
             }
@@ -116,6 +132,18 @@ namespace BookStore.Areas.Admin.Controllers
 
             await _db.Books.AddAsync(viewModel.Book);
             await _db.SaveChangesAsync();
+
+            foreach (var img in viewModel.Book.Photos)
+            {
+                var image = new Image
+                {
+                    BookId = viewModel.Book.Id,
+                    ImageUrl = await img.SavePhotoAsync(_env.WebRootPath, "books")
+                };
+
+                await _db.Images.AddAsync(image);
+                await _db.SaveChangesAsync();
+            }
 
             foreach (var catId in categories)
             {
@@ -139,25 +167,6 @@ namespace BookStore.Areas.Admin.Controllers
                 await _db.SaveChangesAsync();
             }
 
-
-            var images = new Images();
-
-            try
-            {
-                images.BookId = viewModel.Book.Id;
-                images.Thumbnail = await viewModel.Book.Photos[0]?.SavePhotoAsync(_env.WebRootPath, "books");
-                images.SmallThumbnail = await viewModel.Book.Photos[1]?.SavePhotoAsync(_env.WebRootPath, "books");
-                images.Meddium = await viewModel.Book.Photos[2]?.SavePhotoAsync(_env.WebRootPath, "books");
-                images.Large = await viewModel.Book.Photos[3]?.SavePhotoAsync(_env.WebRootPath, "books");
-                images.ExtraLarge = await viewModel.Book.Photos[4]?.SavePhotoAsync(_env.WebRootPath, "books");
-            }
-            catch (Exception ex)
-            {
-            }
-
-            await _db.Images.AddAsync(images);
-            await _db.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
         }
 
@@ -169,7 +178,7 @@ namespace BookStore.Areas.Admin.Controllers
 
             if (book == null) return NotFound();
 
-            var model = new BookEditViewModel
+            var model = new BookViewModel
             {
                 Book = book,
                 CategoriesId = book.Categories.Select(b => b.CategoryId),
@@ -179,6 +188,143 @@ namespace BookStore.Areas.Admin.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(BookViewModel viewModel, int[] categories, int[] authors)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Categories = _db.Categories;
+                viewModel.Authors = _db.Authors;
+                viewModel.CategoriesId = categories;
+                viewModel.AuthorsId = authors;
+                return View(viewModel);
+            }
+
+            if (categories.Length == 0 || authors.Length == 0)
+            {
+                ModelState.AddModelError("", "Minimum one category and author are required.");
+                viewModel.Categories = _db.Categories;
+                viewModel.Authors = _db.Authors;
+                viewModel.CategoriesId = categories;
+                viewModel.AuthorsId = authors;
+                return View(viewModel);
+            }
+
+            var bookFromDb = await _db.Books.FindAsync(viewModel.Book.Id);
+
+            if (viewModel.Book.Photos != null)
+            {
+                if (viewModel.Book.Photos.Count + bookFromDb.Images.Count > 5)
+                {
+                    ModelState.AddModelError("", "Maximum 5 images can be in one book.");
+                    viewModel.Categories = _db.Categories;
+                    viewModel.Authors = _db.Authors;
+                    viewModel.CategoriesId = categories;
+                    viewModel.AuthorsId = authors;
+                    viewModel.Book.Images = bookFromDb.Images;
+                    return View(viewModel);
+                }
+
+                foreach (var file in viewModel.Book.Photos)
+                {
+                    if (!file.IsPhoto())
+                    {
+                        ModelState.AddModelError("", "Files must be images.");
+                        viewModel.Categories = _db.Categories;
+                        viewModel.Authors = _db.Authors;
+                        viewModel.CategoriesId = categories;
+                        viewModel.AuthorsId = authors;
+                        return View(viewModel);
+                    }
+                }
+
+                foreach (var img in viewModel.Book.Photos)
+                {
+                    var image = new Image
+                    {
+                        BookId = viewModel.Book.Id,
+                        ImageUrl = await img.SavePhotoAsync(_env.WebRootPath, "books")
+                    };
+
+                    await _db.Images.AddAsync(image);
+                    await _db.SaveChangesAsync();
+                }
+            }
+
+
+            foreach (var cat in bookFromDb.Categories.ToList().Where(c => !categories.Any(ct => ct == c.CategoryId)))
+            {
+                var pivot = await _db.BookCategories.FindAsync(cat.Id);
+                _db.Entry(pivot).State = EntityState.Deleted;
+                await _db.SaveChangesAsync();
+            }
+
+            foreach (var author in bookFromDb.Authors.ToList().Where(a => !authors.Any(au => au == a.AuthorId)))
+            {
+                var pivot = await _db.BookAuthors.FindAsync(author.Id);
+                _db.Entry(pivot).State = EntityState.Deleted;
+                await _db.SaveChangesAsync();
+            }
+
+            foreach (var catId in categories.Where(c => !bookFromDb.Categories.Any(bc => bc.CategoryId == c)))
+            {
+                var bookCategory = new BookCategoryPivot
+                {
+                    CategoryId = catId,
+                    BookId = viewModel.Book.Id
+                };
+                await _db.BookCategories.AddAsync(bookCategory);
+                await _db.SaveChangesAsync();
+            }
+
+            foreach (var authorId in authors.Where(a => !bookFromDb.Authors.Any(ab => ab.AuthorId == a)))
+            {
+                var bookAuhtor = new BookAuthorPivot
+                {
+                    AuthorId = authorId,
+                    BookId = viewModel.Book.Id
+                };
+                await _db.BookAuthors.AddAsync(bookAuhtor);
+                await _db.SaveChangesAsync();
+            }
+
+            viewModel.Book.CreatedAt = bookFromDb.CreatedAt;
+            viewModel.Book.ModifiedAt = DateTime.Now;
+            _db.Entry(bookFromDb).State = EntityState.Detached;
+            _db.Entry(viewModel.Book).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeleteImage(int? imageId)
+        {
+            var result = new
+            {
+                data = "Something goes wrong.",
+                icon = "error"
+            };
+
+            if (imageId == null) return Json(result);
+
+            var image = await _db.Images.FindAsync(imageId);
+
+            if (image == null) return Json(result);
+
+            Delete(_env.WebRootPath + @"\" + image.ImageUrl);
+
+            _db.Entry(image).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+
+            result = new
+            {
+                data = "Image was successfully deleted.",
+                icon = "success"
+            };
+
+            return Json(result);
         }
     }
 }

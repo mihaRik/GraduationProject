@@ -17,7 +17,7 @@ namespace BookStore.Data
         }
 
         public DbSet<Book> Books { get; set; }
-        public DbSet<Images> Images { get; set; }
+        public DbSet<Image> Images { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<BookCategoryPivot> BookCategories { get; set; }

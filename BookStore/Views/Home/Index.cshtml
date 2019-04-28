@@ -5,14 +5,14 @@
 <input type="text" id="text" />
 <a class="btn btn-primary" id="search">Search</a>
 
-
+<div class="row" id="row"></div>
 
 @section scripts{
     <script>
         $(document).on("keypress", "#text", function (key) {
             if (key.keyCode === 13) {
                 $.ajax({
-                    url: "Home/Book",
+                    url: "/Home/Book",
                     method: "GET",
                     data: { q: $("#text").val() },
                     success: function (res) {
