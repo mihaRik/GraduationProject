@@ -22,6 +22,7 @@ namespace BookStore.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<BookCategoryPivot> BookCategories { get; set; }
         public DbSet<BookAuthorPivot> BookAuthors { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

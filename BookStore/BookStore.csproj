@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190501201119_AddedCommentTable.cs" />
+    <Compile Remove="Migrations\20190501201119_AddedCommentTable.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Areas\Admin\Views\Author\Create.cshtml" />
     <None Include="Areas\Admin\Views\Author\Delete.cshtml" />
     <None Include="Areas\Admin\Views\Author\Edit.cshtml" />

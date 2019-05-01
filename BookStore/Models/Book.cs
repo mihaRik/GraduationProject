@@ -18,6 +18,7 @@ namespace BookStore.Models
             Categories = new HashSet<BookCategoryPivot>();
             Authors = new HashSet<BookAuthorPivot>();
             Images = new HashSet<Image>();
+            Comments = new HashSet<Comment>();
         }
 
         public int Id { get; set; }
@@ -61,6 +62,8 @@ namespace BookStore.Models
         public DateTime CreatedAt { get; set; }
 
         public DateTime ModifiedAt { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
 
         public virtual ICollection<Image> Images { get; set; }
 

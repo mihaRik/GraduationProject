@@ -1,0 +1,128 @@
+﻿@model Book
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link href="~/lib/owl/dist/assets/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/lib/owl/dist/assets/owl.theme.default.min.css" rel="stylesheet" />
+}
+
+<div class="row">
+    <div class="col-12">
+        <div class="row my-3">
+            <div class="col-4">
+                <div class="owl-carousel">
+                    @foreach (var img in Model.Images)
+                    {
+                        <div class="item">
+                            <img src="@img.ImageUrl" style="height: 350px; object-fit: contain;" />
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-8">
+                <h2 class="text-primary">@Model.Title</h2>
+                @if (!string.IsNullOrEmpty(Model.Subtitle))
+                {
+                    <h4>@Model.Subtitle</h4>
+                }
+                <p>
+                    @if (Model.Authors.Count > 1)
+                    {
+                        <span class="font-weight-bold">Authors: </span>
+                    }
+                    else
+                    {
+                        <span class="font-weight-bold">Author: </span>
+                    }
+
+                    @foreach (var author in Model.Authors)
+                    {
+                        <a asp-controller="author" asp-action="details" asp-route-id="@author.Author.Id"
+                           class=text-info ml-2">@author.Author.Fullname</a>
+                    }
+                </p>
+                <p>
+                    @if (Model.Categories.Count > 1)
+                    {
+                        <span class="font-weight-bold">Categories: </span>
+                    }
+                    else
+                    {
+                        <span class="font-weight-bold">Category: </span>
+                    }
+
+                    @foreach (var cat in Model.Categories)
+                    {
+                        <a asp-controller="category" asp-action="details" asp-route-id="@cat.Category.Id"
+                           class=text-info ml-2">@cat.Category.Name</a>
+                    }
+                </p>
+                <p><span class="font-weight-bold">Description:</span><br />@Model.Description</p>
+                <p id="flag">
+                    <span class="font-weight-bold">Language: </span>
+                    <img src="#" alt="Alternate Text" class="img-thumbnail" style="width: 50px; height:  35px;" />
+                </p>
+                <p><span class="font-weight-bold">Page count: </span>@Model.PageCount</p>
+                <p><span class="font-weight-bold">Publisher: </span>@Model.Publisher</p>
+                <p><span class="font-weight-bold">Publish date: </span>@Model.PublishedDate.ToShortDateString()</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-8">
+                <div id="commentsview">
+                    <partial name="_CommentsPartial" model="@Model.Comments" />
+                </div>
+                <div class="input-group mb-3">
+                    <textarea rows="4" id="comment" type="text" class="form-control" placeholder="Comment" aria-describedby="basic-addon2"></textarea>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" id="share" type="button">Share</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/lib/owl/dist/owl.carousel.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".owl-carousel").owlCarousel({
+                loop: false,
+                items: 1
+            });
+
+            $(document).on("click", "#share", function () {
+                $.ajax({
+                    url: "/comment/add",
+                    data: {
+                        comment: $("#comment").val(),
+                        bookId: @Model.Id
+                    },
+                    success: function (res) {
+                        $("#commentsview").html(res);
+                    }
+                })
+            })
+
+            $.ajax({
+                url: "https://restcountries.eu/rest/v2/alpha/@Model.Language",
+                success: function (res) {
+                    console.log(res);
+                    if (res.flag) {
+                        $("#flag img").attr("src", res.flag);
+                    } else {
+                        $("#flag img").attr("src", "https://restcountries.eu/data/gbr.svg");
+                    }
+                },
+                error: function (res) {
+                    $("#flag img").attr("src", "https://restcountries.eu/data/gbr.svg");
+                }
+            })
+        })
+    </script>
+}

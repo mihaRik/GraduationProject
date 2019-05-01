@@ -26,20 +26,7 @@ namespace BookStore.Controllers
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public async Task<IActionResult> Book(string q)
-        {
-            var service = new BooksService(new BaseClientService.Initializer
-            {
-                ApplicationName = "mihaRik's book store",
-                ApiKey = _config["Data:APIKeys:GoogleBookAPI"],
-            });
-
-            var volumes = await service.Volumes.List(q).ExecuteAsync();
-
-            return PartialView("_Test", volumes.Items);
+            return View(_db.Books.OrderByDescending(b => b.CreatedAt).Take(10));
         }
 
         public IActionResult About()

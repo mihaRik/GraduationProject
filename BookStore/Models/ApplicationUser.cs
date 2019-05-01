@@ -11,6 +11,11 @@ namespace BookStore.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+            Comments = new HashSet<Comment>();
+        }
+
         [StringLength(100), MinLength(3)]
         public string Firstname { get; set; }
 
@@ -32,5 +37,7 @@ namespace BookStore.Models
 
         [NotMapped]
         public IFormFile Photo { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
