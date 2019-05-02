@@ -1,20 +1,84 @@
-﻿@model Book
+﻿@model BookDetailsViewModel
 @{
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = Model.Book.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section styles{
     <link href="~/lib/owl/dist/assets/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/lib/owl/dist/assets/owl.theme.default.min.css" rel="stylesheet" />
+    <style>
+        .rating {
+            --uiRatingSize: var(--ratingSize, 20px);
+            --uiRatingColor: var(--ratingColor, #eee);
+            --uiRatingColorActive: var(--ratingColorActive, #ffcc00);
+            --uiRatingStroke: var(--ratingStroke, #222);
+            --uiRatingStrokeWidth: var(--ratingStrokeWidth, 1px);
+            display: flex;
+            font-size: var(--uiRatingSize);
+            color: var(--uiRatingColor);
+            position: relative;
+        }
+
+        .rating__control {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .rating__item {
+            -webkit-tap-highlight-color: transparent;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .rating__item {
+            padding-left: .25em;
+            padding-right: .25em;
+        }
+
+        .rating__star {
+            display: block;
+            width: 1em;
+            height: 1em;
+            fill: currentColor;
+            stroke: var(--uiRatingStroke);
+            stroke-width: var(--uiRatingStrokeWidth);
+        }
+
+        .rating__label {
+            position: absolute;
+            top: 0;
+            left: -9999px;
+        }
+
+        .rating:hover,
+        .rating__control:nth-of-type(1):checked ~ .rating__item:nth-of-type(1),
+        .rating__control:nth-of-type(2):checked ~ .rating__item:nth-of-type(-n+2),
+        .rating__control:nth-of-type(3):checked ~ .rating__item:nth-of-type(-n+3),
+        .rating__control:nth-of-type(4):checked ~ .rating__item:nth-of-type(-n+4),
+        .rating__control:nth-of-type(5):checked ~ .rating__item:nth-of-type(-n+5) {
+            color: var(--uiRatingColorActive);
+        }
+
+        .rating__item:hover ~ .rating__item {
+            color: var(--uiRatingColor);
+        }
+
+        .rating {
+            --ratingSize: 20px;
+            --ratingColor: lightgray;
+            --ratingColorActive: #FFC058;
+        }
+    </style>
 }
 
+@*book details start*@
 <div class="row">
     <div class="col-12">
         <div class="row my-3">
             <div class="col-4">
-                <div class="owl-carousel">
-                    @foreach (var img in Model.Images)
+                <div class="owl-carousel book-images">
+                    @foreach (var img in Model.Book.Images)
                     {
                         <div class="item">
                             <img src="@img.ImageUrl" style="height: 350px; object-fit: contain;" />
@@ -23,13 +87,13 @@
                 </div>
             </div>
             <div class="col-8">
-                <h2 class="text-primary">@Model.Title</h2>
-                @if (!string.IsNullOrEmpty(Model.Subtitle))
+                <h2 class="text-primary">@Model.Book.Title</h2>
+                @if (!string.IsNullOrEmpty(Model.Book.Subtitle))
                 {
-                    <h4>@Model.Subtitle</h4>
+                    <h4>@Model.Book.Subtitle</h4>
                 }
                 <p>
-                    @if (Model.Authors.Count > 1)
+                    @if (Model.Book.Authors.Count > 1)
                     {
                         <span class="font-weight-bold">Authors: </span>
                     }
@@ -38,14 +102,14 @@
                         <span class="font-weight-bold">Author: </span>
                     }
 
-                    @foreach (var author in Model.Authors)
+                    @foreach (var author in Model.Book.Authors)
                     {
                         <a asp-controller="author" asp-action="details" asp-route-id="@author.Author.Id"
                            class=text-info ml-2">@author.Author.Fullname</a>
                     }
                 </p>
                 <p>
-                    @if (Model.Categories.Count > 1)
+                    @if (Model.Book.Categories.Count > 1)
                     {
                         <span class="font-weight-bold">Categories: </span>
                     }
@@ -54,63 +118,241 @@
                         <span class="font-weight-bold">Category: </span>
                     }
 
-                    @foreach (var cat in Model.Categories)
+                    @foreach (var cat in Model.Book.Categories)
                     {
                         <a asp-controller="category" asp-action="details" asp-route-id="@cat.Category.Id"
                            class=text-info ml-2">@cat.Category.Name</a>
                     }
                 </p>
-                <p><span class="font-weight-bold">Description:</span><br />@Model.Description</p>
+                <p><span class="font-weight-bold">Description:</span><br />@Model.Book.Description</p>
                 <p id="flag">
                     <span class="font-weight-bold">Language: </span>
                     <img src="#" alt="Alternate Text" class="img-thumbnail" style="width: 50px; height:  35px;" />
                 </p>
-                <p><span class="font-weight-bold">Page count: </span>@Model.PageCount</p>
-                <p><span class="font-weight-bold">Publisher: </span>@Model.Publisher</p>
-                <p><span class="font-weight-bold">Publish date: </span>@Model.PublishedDate.ToShortDateString()</p>
+                <p><span class="font-weight-bold">Page count: </span>@Model.Book.PageCount</p>
+                <p><span class="font-weight-bold">Publisher: </span>@Model.Book.Publisher</p>
+                <p><span class="font-weight-bold">Publish date: </span>@Model.Book.PublishedDate.ToShortDateString()</p>
             </div>
         </div>
         <div class="row">
-            <div class="col-4"></div>
+            <div class="col-4 rating-info">
+                <h4 class="text-info text-center">@(Model.Book.AvgRating == 0 ? "No rating" : Model.Book.AvgRating.ToString())</h4>
+                <div class="rating-starts text-center">
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        if (i < Model.Book.AvgRating)
+                        {
+                            <span style="font-size: 20px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                        }
+                        else
+                        {
+                            <span style="font-size: 20px; color: lightgray;"><i class="fas fa-star"></i></span>
+                        }
+                    }
+                </div>
+                <table class="mx-auto mt-3" style="border-collapse: separate; border-spacing: 10px 0;">
+                    <tr>
+                        <td>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                        </td>
+                        <td>@Model.Book.Rating.Count(r => r.RatingValue == 5) times</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                        </td>
+                        <td>@Model.Book.Rating.Count(r => r.RatingValue == 4) times</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                        </td>
+                        <td>@Model.Book.Rating.Count(r => r.RatingValue == 3) times</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                        </td>
+                        <td>@Model.Book.Rating.Count(r => r.RatingValue == 2) times</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                        </td>
+                        <td>@Model.Book.Rating.Count(r => r.RatingValue == 1) times</td>
+                    </tr>
+                </table>
+            </div>
             <div class="col-8">
+                <h3 class="float-left">Comments</h3>
+                <div class="rating float-right">
+                    <input type="radio" name="rating-star" class="rating__control" data-val="1" id="rc1">
+                    <input type="radio" name="rating-star" class="rating__control" data-val="2" id="rc2">
+                    <input type="radio" name="rating-star" class="rating__control" data-val="3" id="rc3">
+                    <input type="radio" name="rating-star" class="rating__control" data-val="4" id="rc4">
+                    <input type="radio" name="rating-star" class="rating__control" data-val="5" id="rc5">
+                    <label for="rc1" class="rating__item">
+                        <i class="fas fa-star"></i>
+                        <span class="rating__label">1</span>
+                    </label>
+                    <label for="rc2" class="rating__item">
+                        <i class="fas fa-star"></i>
+                        <span class="rating__label">2</span>
+                    </label>
+                    <label for="rc3" class="rating__item">
+                        <i class="fas fa-star"></i>
+                        <span class="rating__label">3</span>
+                    </label>
+                    <label for="rc4" class="rating__item">
+                        <i class="fas fa-star"></i>
+                        <span class="rating__label">4</span>
+                    </label>
+                    <label for="rc5" class="rating__item">
+                        <i class="fas fa-star"></i>
+                        <span class="rating__label">5</span>
+                    </label>
+                </div>
                 <div id="commentsview">
-                    <partial name="_CommentsPartial" model="@Model.Comments" />
+                    <partial name="_CommentsPartial" model="@Model.Book.Comments" />
                 </div>
                 <div class="input-group mb-3">
                     <textarea rows="4" id="comment" type="text" class="form-control" placeholder="Comment" aria-describedby="basic-addon2"></textarea>
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" id="share" type="button">Share</button>
+                        <button class="btn btn-outline-secondary" id="share" type="button">
+                            Share
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@*book details end*@
+
+@*similar books start*@
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 class="text-center">Recommended books</h3>
+        <hr />
+        <div class="owl-carousel recommended-books">
+            @foreach (var book in Model.RecommendedBooks)
+            {
+                <div class="card" style="width: 18rem;">
+                    <a asp-controller="book" asp-action="details" asp-route-id="@book.Id">
+                        <img class="card-img-top" style="height: 350px; object-fit: contain;"
+                             src="@book.DefaultImage" alt="Card image cap">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">@book.Title</h5>
+                        <p class="card-text" style="min-height: 50px;">
+                            @(book.Description?.Length > 90 ?
+                                                                                                                                      book.Description.Substring(0, 90) + "..." : book.Description)
+                        </p>
+                        <a asp-controller="book" asp-action="details" asp-route-id="@book.Id"
+                           class="btn btn-primary">See details</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@*similar books end*@
 
 @section scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="~/lib/owl/dist/owl.carousel.min.js"></script>
     <script>
         $(document).ready(function () {
-            $(".owl-carousel").owlCarousel({
+            //carusel book image
+            $(".book-images").owlCarousel({
                 loop: false,
                 items: 1
             });
 
-            $(document).on("click", "#share", function () {
+            //carusel recommended books
+            $(".recommended-books").owlCarousel({
+                loop: true,
+                items: 4,
+                slideBy: 4
+            });
+
+            //rating stars
+            $(document).on("click", "[name='rating-star']", function () {
+                $(this).attr("checked", "")
                 $.ajax({
-                    url: "/comment/add",
+                    url: "/book/rating",
                     data: {
-                        comment: $("#comment").val(),
-                        bookId: @Model.Id
+                        rating: $(this).data("val"),
+                        bookId: @Model.Book.Id
                     },
                     success: function (res) {
-                        $("#commentsview").html(res);
+                        console.log(res);
+                        swal(res.data, "", { icon: res.icon });
+                        $(".rating").hide(500);
                     }
                 })
             })
 
+            //share comment
+            $(document).on("click", "#share", function () {
+                var btn = $(this);
+                btn.text("");
+                btn.append("<img src='/images/books/09b24e31234507.564a1d23c07b4.gif' width='25px;' />");
+                $.ajax({
+                    url: "/comment/add",
+                    data: {
+                        comment: $("#comment").val(),
+                        bookId: @Model.Book.Id
+                    },
+                    success: function (res) {
+                        btn.text("Share");
+                        var returnUrl = window.document.location.pathname;
+                        if (res.code === 404) {
+                            swal({
+                                title: "Please login",
+                                icon: "info",
+                                buttons: ["Login", "Register"]
+                            })
+                                .then((register) => {
+                                if (register) {
+                                    window.open("/account/register?ReturnUrl=" + returnUrl, "_self");
+                                } else {
+                                    window.open("/account/login?ReturnUrl=" + returnUrl, "_self");
+                                }
+                            })
+                        }
+                        $("#commentsview").html(res);
+                    },
+                    error: function (res) {
+                        btn.text("Share");
+
+                    }
+                })
+            })
+
+            //loading language
             $.ajax({
-                url: "https://restcountries.eu/rest/v2/alpha/@Model.Language",
+                url: "https://restcountries.eu/rest/v2/alpha/@Model.Book.Language",
                 success: function (res) {
                     console.log(res);
                     if (res.flag) {

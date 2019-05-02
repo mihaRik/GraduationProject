@@ -1,0 +1,25 @@
+﻿@model IEnumerable<Book>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@foreach (var book in Model)
+{
+    <div class="book-item mb-3">
+        <div class="card" style="width: 18rem;">
+            <a asp-controller="book" asp-action="details" asp-route-id="@book.Id">
+                <img class="card-img-top" style="height: 350px; object-fit: contain;"
+                     src="@book.DefaultImage" alt="Card image cap">
+            </a>
+            <div class="card-body">
+                <h5 class="card-title">@book.Title</h5>
+                <p class="card-text" style="min-height: 50px;">
+                    @(book.Description?.Length > 90 ?
+                                      book.Description.Substring(0, 90) + "..." : book.Description)
+                </p>
+                <a asp-controller="book" asp-action="details" asp-route-id="@book.Id"
+                   class="btn btn-primary">See details</a>
+            </div>
+        </div>
+    </div>
+}

@@ -10,24 +10,7 @@
         <p class="text-info">@Model.Fullname has @Model.Books.Count books</p>
         <hr />
         <div class="d-flex flex-wrap justify-content-around">
-            @foreach (var book in Model.Books)
-            {
-                <div class="book-item mb-3">
-                    <div class="card" style="width: 18rem;">
-                        <img class="card-img-top" style="height: 350px; object-fit: contain"
-                             src="@book.Book.DefaultImage" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">@book.Book.Title</h5>
-                            <p class="card-text" style="min-height: 50px;">
-                                @(book.Book.Description?.Length > 90 ?
-                                  book.Book.Description.Substring(0, 90) + "..." : book.Book.Description)
-                            </p>
-                            <a asp-controller="book" asp-action="details" asp-route-id="@book.Book.Id"
-                               class="btn btn-primary">See details</a>
-                        </div>
-                    </div>
-                </div>
-            }
+            <partial name="_BooksPartial" model="@Model.Books.Select(p => p.Book)" />
         </div>
     </div>
 </div>

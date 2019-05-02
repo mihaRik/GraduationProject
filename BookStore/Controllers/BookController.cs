@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStore.Data;
+using BookStore.Models;
+using BookStore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
@@ -24,7 +26,47 @@ namespace BookStore.Controllers
 
             if (book == null) return NotFound();
 
-            return View(book);
+            var model = new BookDetailsViewModel
+            {
+                Book = book,
+                RecommendedBooks = book.Categories.ToList()[0]
+                                       .Category.Books
+                                       .Select(b => b.Book)
+                                       .Where(b => b.Id != book.Id)
+                                       .Take(12)
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Rating(int? rating, int? bookId)
+        {
+            var res = new
+            {
+                code = 404,
+                data = "Something goes wrong.",
+                icon = "error"
+            };
+
+            if (rating == null || bookId == null) return Json(res);
+
+            var rat = new Rating
+            {
+                BookId = (int)bookId,
+                RatingValue = (int)rating
+            };
+
+            await _db.Rating.AddAsync(rat);
+            await _db.SaveChangesAsync();
+
+            res = new
+            {
+                code = 200,
+                data = "Rating added.",
+                icon = "success"
+            };
+
+            return Json(res);
         }
     }
 }

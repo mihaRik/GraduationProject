@@ -19,6 +19,7 @@ namespace BookStore.Models
             Authors = new HashSet<BookAuthorPivot>();
             Images = new HashSet<Image>();
             Comments = new HashSet<Comment>();
+            Rating = new HashSet<Rating>();
         }
 
         public int Id { get; set; }
@@ -70,6 +71,21 @@ namespace BookStore.Models
         public virtual ICollection<BookCategoryPivot> Categories { get; set; }
 
         public virtual ICollection<BookAuthorPivot> Authors { get; set; }
+
+        public virtual ICollection<Rating> Rating { get; set; }
+
+        public double AvgRating
+        {
+            get
+            {
+                if (Rating.Count != 0)
+                {
+                    return Rating.Average(r => r.RatingValue);
+                }
+
+                return 0;
+            }
+        }
 
         [NotMapped]
         public IFormFileCollection Photos { get; set; }
