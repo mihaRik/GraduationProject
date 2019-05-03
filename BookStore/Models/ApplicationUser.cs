@@ -14,6 +14,7 @@ namespace BookStore.Models
         public ApplicationUser()
         {
             Comments = new HashSet<Comment>();
+            Ratings = new HashSet<Rating>();
         }
 
         [StringLength(100), MinLength(3)]
@@ -39,5 +40,7 @@ namespace BookStore.Models
         public IFormFile Photo { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
+
+        public virtual IEnumerable<Rating> Ratings { get; set; }
     }
 }

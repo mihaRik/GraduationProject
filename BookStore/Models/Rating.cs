@@ -13,6 +13,10 @@ namespace BookStore.Models
         [Range(1, 5)]
         public int RatingValue { get; set; }
 
+        public virtual ApplicationUser User { get; set; }
+
+        public string UserId { get; set; }
+
         public virtual Book Book { get; set; }
 
         public int BookId { get; set; }

@@ -1,0 +1,68 @@
+﻿@model  Book
+
+<h4 class="text-info text-center">@(Model.AvgRating == 0 ? "No rating" : Model.AvgRating.ToString())</h4>
+<div class="rating-starts text-center">
+    @for (int i = 0; i < 5; i++)
+    {
+        if (i < Model.AvgRating)
+        {
+            <span style="font-size: 20px; color: #FFC058;"><i class="fas fa-star"></i></span>
+        }
+        else
+        {
+            <span style="font-size: 20px; color: lightgray;"><i class="fas fa-star"></i></span>
+        }
+    }
+</div>
+<table class="mx-auto mt-3" style="border-collapse: separate; border-spacing: 10px 0;">
+    <tr>
+        <td>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+        </td>
+        <td>@Model.Rating.Count(r => r.RatingValue == 5) times</td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+        </td>
+        <td>@Model.Rating.Count(r => r.RatingValue == 4) times</td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+        </td>
+        <td>@Model.Rating.Count(r => r.RatingValue == 3) times</td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+        </td>
+        <td>@Model.Rating.Count(r => r.RatingValue == 2) times</td>
+    </tr>
+    <tr>
+        <td>
+            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+        </td>
+        <td>@Model.Rating.Count(r => r.RatingValue == 1) times</td>
+    </tr>
+</table>

@@ -136,102 +136,42 @@
         </div>
         <div class="row">
             <div class="col-4 rating-info">
-                <h4 class="text-info text-center">@(Model.Book.AvgRating == 0 ? "No rating" : Model.Book.AvgRating.ToString())</h4>
-                <div class="rating-starts text-center">
-                    @for (int i = 0; i < 5; i++)
-                    {
-                        if (i < Model.Book.AvgRating)
-                        {
-                            <span style="font-size: 20px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                        }
-                        else
-                        {
-                            <span style="font-size: 20px; color: lightgray;"><i class="fas fa-star"></i></span>
-                        }
-                    }
+                <div class="reviews-info">
+                    <partial name="_ReviewsPartial" model="Model.Book" />
                 </div>
-                <table class="mx-auto mt-3" style="border-collapse: separate; border-spacing: 10px 0;">
-                    <tr>
-                        <td>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                        </td>
-                        <td>@Model.Book.Rating.Count(r => r.RatingValue == 5) times</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
-                        </td>
-                        <td>@Model.Book.Rating.Count(r => r.RatingValue == 4) times</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
-                        </td>
-                        <td>@Model.Book.Rating.Count(r => r.RatingValue == 3) times</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
-                        </td>
-                        <td>@Model.Book.Rating.Count(r => r.RatingValue == 2) times</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
-                            <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
-                        </td>
-                        <td>@Model.Book.Rating.Count(r => r.RatingValue == 1) times</td>
-                    </tr>
-                </table>
             </div>
             <div class="col-8">
                 <h3 class="float-left">Comments</h3>
-                <div class="rating float-right">
-                    <input type="radio" name="rating-star" class="rating__control" data-val="1" id="rc1">
-                    <input type="radio" name="rating-star" class="rating__control" data-val="2" id="rc2">
-                    <input type="radio" name="rating-star" class="rating__control" data-val="3" id="rc3">
-                    <input type="radio" name="rating-star" class="rating__control" data-val="4" id="rc4">
-                    <input type="radio" name="rating-star" class="rating__control" data-val="5" id="rc5">
-                    <label for="rc1" class="rating__item">
-                        <i class="fas fa-star"></i>
-                        <span class="rating__label">1</span>
-                    </label>
-                    <label for="rc2" class="rating__item">
-                        <i class="fas fa-star"></i>
-                        <span class="rating__label">2</span>
-                    </label>
-                    <label for="rc3" class="rating__item">
-                        <i class="fas fa-star"></i>
-                        <span class="rating__label">3</span>
-                    </label>
-                    <label for="rc4" class="rating__item">
-                        <i class="fas fa-star"></i>
-                        <span class="rating__label">4</span>
-                    </label>
-                    <label for="rc5" class="rating__item">
-                        <i class="fas fa-star"></i>
-                        <span class="rating__label">5</span>
-                    </label>
-                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="rating float-right">
+                        <input type="radio" name="rating-star" class="rating__control" data-val="1" id="rc1">
+                        <input type="radio" name="rating-star" class="rating__control" data-val="2" id="rc2">
+                        <input type="radio" name="rating-star" class="rating__control" data-val="3" id="rc3">
+                        <input type="radio" name="rating-star" class="rating__control" data-val="4" id="rc4">
+                        <input type="radio" name="rating-star" class="rating__control" data-val="5" id="rc5">
+                        <label for="rc1" class="rating__item">
+                            <i class="fas fa-star"></i>
+                            <span class="rating__label">1</span>
+                        </label>
+                        <label for="rc2" class="rating__item">
+                            <i class="fas fa-star"></i>
+                            <span class="rating__label">2</span>
+                        </label>
+                        <label for="rc3" class="rating__item">
+                            <i class="fas fa-star"></i>
+                            <span class="rating__label">3</span>
+                        </label>
+                        <label for="rc4" class="rating__item">
+                            <i class="fas fa-star"></i>
+                            <span class="rating__label">4</span>
+                        </label>
+                        <label for="rc5" class="rating__item">
+                            <i class="fas fa-star"></i>
+                            <span class="rating__label">5</span>
+                        </label>
+                    </div>
+                }
                 <div id="commentsview">
                     <partial name="_CommentsPartial" model="@Model.Book.Comments" />
                 </div>
@@ -266,7 +206,7 @@
                         <h5 class="card-title">@book.Title</h5>
                         <p class="card-text" style="min-height: 50px;">
                             @(book.Description?.Length > 90 ?
-                                                                                                                                      book.Description.Substring(0, 90) + "..." : book.Description)
+                                                                                                                                                              book.Description.Substring(0, 90) + "..." : book.Description)
                         </p>
                         <a asp-controller="book" asp-action="details" asp-route-id="@book.Id"
                            class="btn btn-primary">See details</a>
