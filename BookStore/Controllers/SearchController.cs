@@ -146,7 +146,7 @@ namespace BookStore.Controllers
                             ImageUrl = volume.ImageLinks.Large,
                             BookId = book.Id
                         };
-                        if (!string.IsNullOrEmpty(image.ImageUrl))
+                        if (!string.IsNullOrEmpty(image1.ImageUrl))
                         {
                             await _db.Images.AddAsync(image1);
                             await _db.SaveChangesAsync();
@@ -157,7 +157,7 @@ namespace BookStore.Controllers
                             ImageUrl = volume.ImageLinks.Medium,
                             BookId = book.Id
                         };
-                        if (!string.IsNullOrEmpty(image.ImageUrl))
+                        if (!string.IsNullOrEmpty(image2.ImageUrl))
                         {
                             await _db.Images.AddAsync(image2);
                             await _db.SaveChangesAsync();
@@ -168,7 +168,7 @@ namespace BookStore.Controllers
                             ImageUrl = volume.ImageLinks.SmallThumbnail,
                             BookId = book.Id
                         };
-                        if (!string.IsNullOrEmpty(image.ImageUrl))
+                        if (!string.IsNullOrEmpty(image3.ImageUrl))
                         {
                             await _db.Images.AddAsync(image3);
                             await _db.SaveChangesAsync();

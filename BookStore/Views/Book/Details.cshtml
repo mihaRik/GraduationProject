@@ -124,7 +124,8 @@
                            class=text-info ml-2">@cat.Category.Name</a>
                     }
                 </p>
-                <p><span class="font-weight-bold">Description:</span><br />@Model.Book.Description</p>
+                <p><span class="font-weight-bold">Description:</span><br />@(string.IsNullOrEmpty(Model.Book.Description) ?
+                                                                             "Description not available" : Model.Book.Description)</p>
                 <p id="flag">
                     <span class="font-weight-bold">Language: </span>
                     <img src="#" alt="Alternate Text" class="img-thumbnail" style="width: 50px; height:  35px;" />
@@ -144,7 +145,8 @@
                 <h3 class="float-left">Comments</h3>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <div class="rating float-right">
+                    <div class="rating float-right" id="rating">
+                    <h4 class="m-0 mt-1 text-dark">Rate please: </h4>
                         <input type="radio" name="rating-star" class="rating__control" data-val="1" id="rc1">
                         <input type="radio" name="rating-star" class="rating__control" data-val="2" id="rc2">
                         <input type="radio" name="rating-star" class="rating__control" data-val="3" id="rc3">
@@ -206,7 +208,7 @@
                         <h5 class="card-title">@book.Title</h5>
                         <p class="card-text" style="min-height: 50px;">
                             @(book.Description?.Length > 90 ?
-                                                                                                                                                              book.Description.Substring(0, 90) + "..." : book.Description)
+                                                                                                                                                                                              book.Description.Substring(0, 90) + "..." : book.Description)
                         </p>
                         <a asp-controller="book" asp-action="details" asp-route-id="@book.Id"
                            class="btn btn-primary">See details</a>
@@ -223,6 +225,17 @@
     <script src="~/lib/owl/dist/owl.carousel.min.js"></script>
     <script>
         $(document).ready(function () {
+            //check user rate
+            $.ajax({
+                url: "/book/checkcanreview",
+                data: { bookId: @Model.Book.Id},
+                success: function (res) {
+                    if (res) {
+                        $("#rating").remove();
+                    }
+                }
+            })
+
             //carusel book image
             $(".book-images").owlCarousel({
                 loop: false,
@@ -246,7 +259,13 @@
                         bookId: @Model.Book.Id
                     },
                     success: function (res) {
-                        console.log(res);
+                        $.ajax({
+                            url: "/book/refreshreviewpartial",
+                            data: { bookId: @Model.Book.Id},
+                            success: function (res) {
+                                $(".reviews-info").html(res);
+                            }
+                        })
                         swal(res.data, "", { icon: res.icon });
                         $(".rating").hide(500);
                     }
@@ -265,6 +284,7 @@
                         bookId: @Model.Book.Id
                     },
                     success: function (res) {
+                        $("#comment").val("");
                         btn.text("Share");
                         var returnUrl = window.document.location.pathname;
                         if (res.code === 404) {
@@ -294,7 +314,6 @@
             $.ajax({
                 url: "https://restcountries.eu/rest/v2/alpha/@Model.Book.Language",
                 success: function (res) {
-                    console.log(res);
                     if (res.flag) {
                         $("#flag img").attr("src", res.flag);
                     } else {

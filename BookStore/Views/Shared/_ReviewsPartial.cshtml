@@ -1,6 +1,6 @@
 ﻿@model  Book
 
-<h4 class="text-info text-center">@(Model.AvgRating == 0 ? "No rating" : Model.AvgRating.ToString())</h4>
+<h4 class="text-info text-center">@(Model.AvgRating == 0 ? "No rating" : Model.AvgRating.ToString("0.0"))</h4>
 <div class="rating-starts text-center">
     @for (int i = 0; i < 5; i++)
     {

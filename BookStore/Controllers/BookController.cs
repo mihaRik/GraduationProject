@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using BookStore.Data;
 using BookStore.Models;
 using BookStore.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Controllers
@@ -12,12 +14,14 @@ namespace BookStore.Controllers
     public class BookController : Controller
     {
         private readonly BookContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BookController(BookContext db)
+        public BookController(BookContext db, UserManager<ApplicationUser> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
-        
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -26,19 +30,22 @@ namespace BookStore.Controllers
 
             if (book == null) return NotFound();
 
-            var model = new BookDetailsViewModel
-            {
-                Book = book,
-                RecommendedBooks = book.Categories.ToList()[0]
+            var recommendedBook = book.Categories.ToList()[0]
                                        .Category.Books
                                        .Select(b => b.Book)
                                        .Where(b => b.Id != book.Id)
-                                       .Take(12)
+                                       .Take(12);
+
+            var model = new BookDetailsViewModel
+            {
+                Book = book,
+                RecommendedBooks = recommendedBook
             };
 
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Rating(int? rating, int? bookId)
         {
             var res = new
@@ -53,7 +60,8 @@ namespace BookStore.Controllers
             var rat = new Rating
             {
                 BookId = (int)bookId,
-                RatingValue = (int)rating
+                RatingValue = (int)rating,
+                UserId = _userManager.GetUserId(User)
             };
 
             await _db.Rating.AddAsync(rat);
@@ -67,6 +75,32 @@ namespace BookStore.Controllers
             };
 
             return Json(res);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> CheckCanReview(int? bookId)
+        {
+            var result = false;
+
+            if (bookId == null) return Json(result);
+
+            var book = await _db.Books.FindAsync(bookId);
+
+            if (book == null) return Json(result);
+
+            var userId = _userManager.GetUserId(User);
+
+            result = book.Rating.Any(r => r.UserId == userId);
+
+            return Json(result);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> RefreshReviewPartial(int bookId)
+        {
+            var book = await _db.Books.FindAsync(bookId);
+
+            return PartialView("_ReviewsPartial", book);
         }
     }
 }

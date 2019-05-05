@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -11,16 +12,16 @@ namespace BookStore.Models
 {
     public class EmailSender : IEmailSender
     {
-        public EmailSender(IOptions<AuthMessageSenderOptions> options)
-        {
-            Options = options.Value;
-        }
+        private readonly IConfiguration _config;
 
-        public AuthMessageSenderOptions Options { get; }
+        public EmailSender(IConfiguration config)
+        {
+            _config = config;
+        }
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            return Execute(Options.SendGridKey, subject, message, email);
+            return Execute(_config["Data:SendGrid:SendGridKey"], subject, message, email);
         }
 
         public Task Execute(string apiKey, string subject, string message, string email)

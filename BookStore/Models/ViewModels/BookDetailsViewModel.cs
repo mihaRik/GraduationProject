@@ -10,5 +10,7 @@ namespace BookStore.Models.ViewModels
         public Book Book { get; set; }
 
         public IEnumerable<Book> RecommendedBooks { get; set; }
+
+        public bool CanReview { get; set; }
     }
 }

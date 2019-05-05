@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\APIController.cs" />
     <Compile Remove="Migrations\20190501201119_AddedCommentTable.cs" />
     <Compile Remove="Migrations\20190501201119_AddedCommentTable.Designer.cs" />
   </ItemGroup>

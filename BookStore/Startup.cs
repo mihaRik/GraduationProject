@@ -46,7 +46,7 @@ namespace BookStore
             });
 
             services.AddTransient<IEmailSender, EmailSender>();
-            services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.Configure<EmailSender>(Configuration);
 
             services.AddSingleton(Configuration);
 

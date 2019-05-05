@@ -27,7 +27,7 @@
         <div class="owl-carousel">
             @foreach (var slide in Model)
             {
-                <div class="row">
+                <div class="row px-2">
                     <div class="col-8">
                         <h2>@slide.Title</h2>
                         @foreach (var author in slide.Authors)
@@ -43,13 +43,15 @@
                         }
                         <p class="text-secondary mt-2">
                             @(slide.Description?.Length > 300 ?
-                                                      slide.Description.Substring(0, 200) + "..." : slide.Description)
+                                                              slide.Description.Substring(0, 200) + "..." : slide.Description)
                         </p>
                         <a asp-controller="book" asp-action="details" asp-route-id="@slide.Id"
                            class="btn btn-outline-success position-absolute" style="bottom: 30px; right: 20px;">See details</a>
                     </div>
                     <div class="col-4">
-                        <img src="@slide.DefaultImage" class="img-thumbnail" style="height: 300px; object-fit: contain;" />
+                        <a asp-controller="book" asp-action="details" asp-route-id="@slide.Id">
+                            <img src="@slide.DefaultImage" class="img-thumbnail" style="height: 300px; object-fit: contain;" />
+                        </a>
                     </div>
                 </div>
             }
