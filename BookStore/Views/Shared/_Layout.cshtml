@@ -49,19 +49,14 @@
             <ul class="navbar-nav ml-auto">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <li class="nav-item mr-3" id="favorites">
+                    <li class="nav-item mr-3 position-relative" id="favorites">
                         <a href="#" class="nav-link position-relative">
                             <span class="bg-danger rounded-circle p-1 position-absolute text-center"
                                   style="width: 20px; height: 20px; top: 0; left:20px; font-size: 10px;">10</span>
                             <i class="far fa-heart"></i>
                         </a>
-                        <div id="favorites-container">
-                            <div class="ui modal mt-5">
-                                <i class="close icon"></i>
-                                <div class="header">
-                                    Profile Picture
-                                </div>
-                            </div>
+                        <div id="favorites-container" class="position-absolute">
+                            
                         </div>
                     </li>
                     <li class="nav-item"><a asp-controller="Account" asp-action="Details" class="nav-link">Hello, @User.Identity.Name</a></li>
