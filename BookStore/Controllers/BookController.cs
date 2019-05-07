@@ -36,10 +36,18 @@ namespace BookStore.Controllers
                                        .Where(b => b.Id != book.Id)
                                        .Take(12);
 
+            var canAddToFavorites = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                canAddToFavorites = !user.Favorites.Any(f => f.BookId == id);
+            }
+
             var model = new BookDetailsViewModel
             {
                 Book = book,
-                RecommendedBooks = recommendedBook
+                RecommendedBooks = recommendedBook,
+                CanAddToFavorites = canAddToFavorites
             };
 
             return View(model);

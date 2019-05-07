@@ -1,17 +1,23 @@
 ﻿$(document).ready(function () {
     $(document).on("click", "#favorites", function () {
-        $("#favorites-container").show();
-        $("#favorites-container").css("transform", "rotateX(0)");
-        $("#favorites-container").addClass("active");
+        $("#favorites-container").toggle(100);
+        $("#favorites-container").toggleClass("show-favs");
+        if ($("#favorites-container").hasClass("show-favs")) {
+            $("#favorites-container").append('<img src="/images/loader.gif" height="100" class="mx-auto d-block" />');
+            $.ajax({
+                url: "/favorite/getuserfavorites",
+                success: function (res) {
+                    $("#favorites-container").html("");
+                    $("#favorites-container").html(res);
+                }
+            })
+        }
     })
 
-    $(document).click(function (e) {
-        if ($(e.target) != $("#favorites-container")) {
-            if (!$("#favorites-container").hasClass("active")) {
-                $("#favorites-container").removeClass("active");
-                $("#favorites-container").hide();
-                $("#favorites-container").css("transform", "rotateX(-85deg)");
-            }
+    $.ajax({
+        url: "/favorite/favcount",
+        success: function (res) {
+            $("#favorites-count").text(res);
         }
     })
 })

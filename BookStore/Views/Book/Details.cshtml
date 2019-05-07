@@ -87,7 +87,29 @@
                 </div>
             </div>
             <div class="col-8">
-                <h2 class="text-primary">@Model.Book.Title</h2>
+                <h2 class="text-primary">
+                    @(Model.Book.Title)
+                    @if (Model.CanAddToFavorites)
+                    {
+                        <span id="add-to-favorites" class="float-right" style="font-size: 14px; color: #5FAD56;">
+                            Add to favorites
+                            <i class="fas fa-heart" style="font-size: 25px; cursor: pointer;"></i>
+                        </span>
+                        <span id="favorites-loader" style="display: none;" class="float-right">
+                            <img src="~/images/loader.gif" width="25" />
+                        </span>
+                    }
+                    else
+                    {
+                        <span id="add-to-favorites" class="float-right" style="font-size: 14px; color: #B4436C;">
+                            Remove from favorites
+                            <i class="fas fa-heart" style="font-size: 25px; cursor: pointer;"></i>
+                        </span>
+                        <span id="favorites-loader" style="display: none;" class="float-right">
+                            <img src="~/images/loader.gif" width="25" />
+                        </span>
+                    }
+                </h2>
                 @if (!string.IsNullOrEmpty(Model.Book.Subtitle))
                 {
                     <h4>@Model.Book.Subtitle</h4>
@@ -124,8 +146,10 @@
                            class=text-info ml-2">@cat.Category.Name</a>
                     }
                 </p>
-                <p><span class="font-weight-bold">Description:</span><br />@(string.IsNullOrEmpty(Model.Book.Description) ?
-                                                                             "Description not available" : Model.Book.Description)</p>
+                <p>
+                    <span class="font-weight-bold">Description:</span><br />@(string.IsNullOrEmpty(Model.Book.Description) ?
+                                "Description not available" : Model.Book.Description)
+                </p>
                 <p id="flag">
                     <span class="font-weight-bold">Language: </span>
                     <img src="#" alt="Alternate Text" class="img-thumbnail" style="width: 50px; height:  35px;" />
@@ -146,7 +170,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div class="rating float-right" id="rating">
-                    <h4 class="m-0 mt-1 text-dark">Rate please: </h4>
+                        <h4 class="m-0 mt-1 text-dark">Rate please: </h4>
                         <input type="radio" name="rating-star" class="rating__control" data-val="1" id="rc1">
                         <input type="radio" name="rating-star" class="rating__control" data-val="2" id="rc2">
                         <input type="radio" name="rating-star" class="rating__control" data-val="3" id="rc3">
@@ -208,7 +232,7 @@
                         <h5 class="card-title">@book.Title</h5>
                         <p class="card-text" style="min-height: 50px;">
                             @(book.Description?.Length > 90 ?
-                                                                                                                                                                                              book.Description.Substring(0, 90) + "..." : book.Description)
+                                                                                                                                                                                                                                      book.Description.Substring(0, 90) + "..." : book.Description)
                         </p>
                         <a asp-controller="book" asp-action="details" asp-route-id="@book.Id"
                            class="btn btn-primary">See details</a>
@@ -225,6 +249,20 @@
     <script src="~/lib/owl/dist/owl.carousel.min.js"></script>
     <script>
         $(document).ready(function () {
+            //add to favorites
+            $(document).on("click", "#add-to-favorites i", function () {
+                $("#favorites-loader").show();
+                $(this).parent().hide();
+                $.ajax({
+                    url: "/favorite/addtofavorites",
+                    data: { bookId: @Model.Book.Id},
+                    success: function (res) {
+                        swal(res.data, "", { icon: res.icon });
+                        $("#favorites-loader").hide();
+                    }
+                })
+            })
+
             //check user rate
             $.ajax({
                 url: "/book/checkcanreview",
@@ -276,7 +314,7 @@
             $(document).on("click", "#share", function () {
                 var btn = $(this);
                 btn.text("");
-                btn.append("<img src='/images/books/09b24e31234507.564a1d23c07b4.gif' width='25px;' />");
+                btn.append("<img src='/images/loader.gif' width='25px;' />");
                 $.ajax({
                     url: "/comment/add",
                     data: {

@@ -15,6 +15,7 @@ namespace BookStore.Models
         {
             Comments = new HashSet<Comment>();
             Ratings = new HashSet<Rating>();
+            Favorites = new HashSet<BookFavoritePivot>();
         }
 
         [StringLength(100), MinLength(3)]
@@ -42,5 +43,7 @@ namespace BookStore.Models
         public virtual ICollection<Comment> Comments { get; set; }
 
         public virtual IEnumerable<Rating> Ratings { get; set; }
+
+        public virtual ICollection<BookFavoritePivot> Favorites { get; set; }
     }
 }

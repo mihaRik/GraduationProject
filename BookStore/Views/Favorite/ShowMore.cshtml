@@ -1,0 +1,16 @@
+﻿@model IEnumerable<BookFavoritePivot>
+@{
+    ViewData["Title"] = "ShowMore";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="text-primary">Favorites</h2>
+        <hr />
+        <div class="d-flex flex-wrap justify-content-around">
+            <partial name="_BooksPartial" model="@Model.Select(f => f.Book)" />
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<BookFavoritePivot>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@if (Model.Count() == 0)
+{
+    <h4 class="text-center p-3">No favorite books yet</h4>
+}
+else
+{
+    @if (Model.Count() > 5)
+    {
+        <h4>Favorites</h4>
+        for (int i = 0; i < 5; i++)
+        {
+            var fav = Model.ElementAt(i);
+            <div class="fav-item-container border-bottom mb-2 pb-2">
+                <div class="row">
+                    <div class="col-4 text-center">
+                        <a asp-controller="book" asp-action="details" asp-route-id="@fav.Book.Id">
+                            <img src="@fav.Book.DefaultImage" alt="Alternate Text" height="50" />
+                        </a>
+                    </div>
+                    <div class="col-8">
+                        <a asp-controller="book" asp-action="details" asp-route-id="@fav.Book.Id">
+                            @(fav.Book.Title.Length > 20 ? fav.Book.Title.Substring(0, 20) + "..." : fav.Book.Title)
+                        </a>
+                        <br />
+                        <span class="position-absolute" style="bottom: 0; font-size: 11px;">Added at: @fav.AddedAt.ToShortDateString()</span>
+                    </div>
+                </div>
+            </div>
+        }
+        <a class="float-right" asp-controller="favorite" asp-action="showmore">Show more...</a>
+    }
+    else
+    {
+        foreach (var fav in Model)
+        {
+            <div class="fav-item-container border-bottom mb-2 pb-2">
+                <div class="row">
+                    <div class="col-4 text-center">
+                        <a asp-controller="book" asp-action="details" asp-route-id="@fav.Book.Id">
+                            <img src="@fav.Book.DefaultImage" alt="Alternate Text" height="50" />
+                        </a>
+                    </div>
+                    <div class="col-8">
+                        <a asp-controller="book" asp-action="details" asp-route-id="@fav.Book.Id">
+                            @(fav.Book.Title.Length > 20 ? fav.Book.Title.Substring(0, 20) + "..." : fav.Book.Title)
+                        </a>
+                        <br />
+                        <span class="position-absolute" style="bottom: 0; font-size: 11px;">@fav.AddedAt.ToShortDateString()</span>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}

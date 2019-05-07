@@ -41,14 +41,22 @@ body {
 }
 
 #favorites-container {
-    transform-style: preserve-3d;
+    position: absolute;
     top: 40px;
     left: -100px;
     width: 300px;
-    height: 300px;
-    background: rgba(0, 0, 0, 0.5);
     display: none;
+    background-color: white;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, .3);
+    padding: 10px;
+    transform-style: preserve-3d;
     transform-origin: top;
     transform: rotateX(-85deg);
     transition: all .2s ease-in-out;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.show-favs{
+    transform: rotateX(0)!important;
 }

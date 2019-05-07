@@ -20,6 +20,7 @@ namespace BookStore.Models
             Images = new HashSet<Image>();
             Comments = new HashSet<Comment>();
             Rating = new HashSet<Rating>();
+            Favorites = new HashSet<BookFavoritePivot>();
         }
 
         public int Id { get; set; }
@@ -73,6 +74,8 @@ namespace BookStore.Models
         public virtual ICollection<BookAuthorPivot> Authors { get; set; }
 
         public virtual ICollection<Rating> Rating { get; set; }
+
+        public virtual ICollection<BookFavoritePivot> Favorites { get; set; }
 
         public double AvgRating
         {
