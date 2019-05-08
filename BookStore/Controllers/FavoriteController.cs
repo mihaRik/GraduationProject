@@ -7,6 +7,7 @@ using BookStore.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Controllers
 {
@@ -73,6 +74,40 @@ namespace BookStore.Controllers
             {
                 code = 200,
                 data = "Book add to favorites",
+                icon = "success"
+            };
+
+            return Json(res);
+        }
+
+        public async Task<IActionResult> RemoveFromFavorites(int? bookId)
+        {
+            var res = new
+            {
+                code = 404,
+                data = "Something goes wrong.",
+                icon = "error"
+            };
+
+            if (bookId == null) return Json(res);
+
+            var book = await _db.Books.FindAsync(bookId);
+
+            if (book == null) return Json(res);
+
+            var user = await _userManager.GetUserAsync(User);
+
+            if (!user.Favorites.Any(f => f.BookId == bookId)) return Json(res);
+
+            var pivot = user.Favorites.FirstOrDefault(f => f.Book.Id == bookId);
+
+            _db.Entry(pivot).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+
+            res = new
+            {
+                code = 200,
+                data = "This book removed from your favorites.",
                 icon = "success"
             };
 

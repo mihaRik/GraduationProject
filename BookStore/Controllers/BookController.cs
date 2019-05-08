@@ -8,6 +8,7 @@ using BookStore.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Controllers
 {
@@ -42,6 +43,10 @@ namespace BookStore.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 canAddToFavorites = !user.Favorites.Any(f => f.BookId == id);
             }
+
+            book.ViewCount++;
+            _db.Entry(book).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
 
             var model = new BookDetailsViewModel
             {
@@ -109,6 +114,22 @@ namespace BookStore.Controllers
             var book = await _db.Books.FindAsync(bookId);
 
             return PartialView("_ReviewsPartial", book);
+        }
+
+        public async Task<IActionResult> GetBooks()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> GetBooksAPI(int start, int length)
+        {
+            var model = new
+            {
+                total = _db.Books.Count(),
+                items = _db.Books.Skip(start).Take(length),
+            };
+
+            return Json(model);
         }
     }
 }

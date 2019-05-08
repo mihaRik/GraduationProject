@@ -65,6 +65,8 @@ namespace BookStore.Models
 
         public DateTime ModifiedAt { get; set; }
 
+        public int ViewCount { get; set; }
+
         public virtual ICollection<Comment> Comments { get; set; }
 
         public virtual ICollection<Image> Images { get; set; }

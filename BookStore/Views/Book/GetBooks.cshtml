@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewData["Title"] = "Books";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Books</h2>
+<div class="ui divider"></div>
+<div class="row">
+    <div class="col-2 border">filters</div>
+    <div class="col-10">
+        <div class="ui icon input float-right">
+            <input type="text" placeholder="Search...">
+            <i class="inverted circular search link icon"></i>
+        </div>
+        <div class="pagination-container">
+            <div class="ui pagination menu">
+                <a class="active item">
+                    1
+                </a>
+                <div class="disabled item">
+                    ...
+                </div>
+                <a class="item">
+                    10
+                </a>
+                <a class="item">
+                    11
+                </a>
+                <a class="item">
+                    12
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "/book/getbooksapi",
+                success: function (res) {
+
+                }
+            })
+        })
+    </script>
+}

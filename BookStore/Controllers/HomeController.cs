@@ -10,6 +10,7 @@ using Google.Apis.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using BookStore.Data;
+using BookStore.Models.ViewModels;
 
 namespace BookStore.Controllers
 {
@@ -26,7 +27,16 @@ namespace BookStore.Controllers
 
         public IActionResult Index()
         {
-            return View(_db.Books.OrderByDescending(b => b.CreatedAt).Take(10));
+            var model = new HomeIndexViewModel
+            {
+                Slider = _db.Books.OrderByDescending(b => b.CreatedAt).Take(10),
+                MostCommentedBooks = _db.Books.OrderByDescending(b => b.Comments.Count).Take(4),
+                MostFavoriteBooks = _db.Books.OrderByDescending(b => b.Favorites.Count).Take(4),
+                MostViewedBooks = _db.Books.OrderByDescending(b => b.ViewCount).Take(4),
+                MostRatedBooks = _db.Books.OrderByDescending(b => b.Rating.Count).Take(4)
+            };
+
+            return View(model);
         }
 
         public IActionResult About()

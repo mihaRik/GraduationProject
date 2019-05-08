@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Book>
+﻿@model HomeIndexViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -8,6 +8,7 @@
     <link href="~/lib/owl/dist/assets/owl.theme.default.min.css" rel="stylesheet" />
 }
 
+@*slider section start*@
 <div class="row">
     <div class="col-12">
         <div class="search float-left">
@@ -25,7 +26,7 @@
 <div class="row mt-5">
     <div class="col-12" style="height: 400px;">
         <div class="owl-carousel">
-            @foreach (var slide in Model)
+            @foreach (var slide in Model.Slider)
             {
                 <div class="row px-2">
                     <div class="col-8">
@@ -43,7 +44,7 @@
                         }
                         <p class="text-secondary mt-2">
                             @(slide.Description?.Length > 300 ?
-                                                              slide.Description.Substring(0, 200) + "..." : slide.Description)
+                                                                                                                              slide.Description.Substring(0, 200) + "..." : slide.Description)
                         </p>
                         <a asp-controller="book" asp-action="details" asp-route-id="@slide.Id"
                            class="btn btn-outline-success position-absolute" style="bottom: 30px; right: 20px;">See details</a>
@@ -58,6 +59,71 @@
         </div>
     </div>
 </div>
+@*slider section end*@
+
+@*most viewed books section start*@
+<div class="row">
+    <div class="col-12">
+        <h3 class="text-center font-weight-bold mb-3">Most viewed books</h3>
+        <div class="most-viewed-container d-flex justify-content-between">
+            <partial name="_BooksPartial" model="Model.MostViewedBooks" />
+        </div>
+    </div>
+</div>
+@*most viewed books section end*@
+
+@*most commented books section start*@
+<div class="row">
+    <div class="col-12">
+        <h3 class="text-center font-weight-bold mb-3 mt-5">Most commented books</h3>
+        <div class="most-viewed-container d-flex justify-content-between">
+            <partial name="_BooksPartial" model="Model.MostCommentedBooks" />
+        </div>
+    </div>
+</div>
+@*most commented books section end*@
+
+@*most favorite books section start*@
+<div class="row">
+    <div class="col-12">
+        <h3 class="text-center font-weight-bold mb-3 mt-5">Most favorite books</h3>
+        <div class="most-viewed-container d-flex justify-content-between">
+            <partial name="_BooksPartial" model="Model.MostFavoriteBooks" />
+        </div>
+    </div>
+</div>
+@*most favorite books section end*@
+
+@*most rated books section start*@
+<div class="row">
+    <div class="col-12">
+        <h3 class="text-center font-weight-bold mb-3 mt-5">Most rated books</h3>
+        <div class="most-viewed-container d-flex justify-content-between">
+            @foreach (var book in Model.MostRatedBooks)
+            {
+                <div class="book-item mb-3">
+                    <div class="card" style="width: 18rem;">
+                        <a asp-controller="book" asp-action="details" asp-route-id="@book.Id">
+                            <img class="card-img-top" style="height: 350px; object-fit: contain;"
+                                 src="@book.DefaultImage" alt="Card image cap">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text" style="min-height: 50px;">
+                                @(book.Description?.Length > 90 ?
+                                                                  book.Description.Substring(0, 90) + "..." : book.Description)
+                            </p>
+                            <p class="text-info text-center">Average rating: @book.AvgRating.ToString("#.##")</p>
+                            <a asp-controller="book" asp-action="details" asp-route-id="@book.Id"
+                               class="btn btn-primary">See details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@*most rated books section end*@
 
 @section scripts{
     <script src="~/lib/owl/dist/owl.carousel.min.js"></script>

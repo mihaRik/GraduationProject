@@ -89,25 +89,28 @@
             <div class="col-8">
                 <h2 class="text-primary">
                     @(Model.Book.Title)
-                    @if (Model.CanAddToFavorites)
+                    @if (User.Identity.IsAuthenticated)
                     {
-                        <span id="add-to-favorites" class="float-right" style="font-size: 14px; color: #5FAD56;">
-                            Add to favorites
-                            <i class="fas fa-heart" style="font-size: 25px; cursor: pointer;"></i>
-                        </span>
-                        <span id="favorites-loader" style="display: none;" class="float-right">
-                            <img src="~/images/loader.gif" width="25" />
-                        </span>
-                    }
-                    else
-                    {
-                        <span id="add-to-favorites" class="float-right" style="font-size: 14px; color: #B4436C;">
-                            Remove from favorites
-                            <i class="fas fa-heart" style="font-size: 25px; cursor: pointer;"></i>
-                        </span>
-                        <span id="favorites-loader" style="display: none;" class="float-right">
-                            <img src="~/images/loader.gif" width="25" />
-                        </span>
+                        if (Model.CanAddToFavorites)
+                        {
+                            <span id="add-to-favorites" class="float-right" style="font-size: 14px; color: #5FAD56;">
+                                Add to favorites
+                                <i class="fas fa-heart" style="font-size: 25px; cursor: pointer;"></i>
+                            </span>
+                            <span id="favorites-loader" style="display: none;" class="float-right">
+                                <img src="~/images/loader.gif" width="25" />
+                            </span>
+                        }
+                        else
+                        {
+                            <span id="remove-from-favorites" class="float-right" style="font-size: 14px; color: #B4436C;">
+                                Remove from favorites
+                                <i class="fas fa-heart" style="font-size: 25px; cursor: pointer;"></i>
+                            </span>
+                            <span id="favorites-loader" style="display: none;" class="float-right">
+                                <img src="~/images/loader.gif" width="25" />
+                            </span>
+                        }
                     }
                 </h2>
                 @if (!string.IsNullOrEmpty(Model.Book.Subtitle))
@@ -148,7 +151,7 @@
                 </p>
                 <p>
                     <span class="font-weight-bold">Description:</span><br />@(string.IsNullOrEmpty(Model.Book.Description) ?
-                                "Description not available" : Model.Book.Description)
+"Description not available" : Model.Book.Description)
                 </p>
                 <p id="flag">
                     <span class="font-weight-bold">Language: </span>
@@ -157,6 +160,7 @@
                 <p><span class="font-weight-bold">Page count: </span>@Model.Book.PageCount</p>
                 <p><span class="font-weight-bold">Publisher: </span>@Model.Book.Publisher</p>
                 <p><span class="font-weight-bold">Publish date: </span>@Model.Book.PublishedDate.ToShortDateString()</p>
+                <p><span class="font-weight-bold">View count: </span>@Model.Book.ViewCount</p>
             </div>
         </div>
         <div class="row">
@@ -232,7 +236,7 @@
                         <h5 class="card-title">@book.Title</h5>
                         <p class="card-text" style="min-height: 50px;">
                             @(book.Description?.Length > 90 ?
-                                                                                                                                                                                                                                      book.Description.Substring(0, 90) + "..." : book.Description)
+                                                                                                                                                                                                                                                      book.Description.Substring(0, 90) + "..." : book.Description)
                         </p>
                         <a asp-controller="book" asp-action="details" asp-route-id="@book.Id"
                            class="btn btn-primary">See details</a>
@@ -257,6 +261,22 @@
                     url: "/favorite/addtofavorites",
                     data: { bookId: @Model.Book.Id},
                     success: function (res) {
+                        swal(res.data, "", { icon: res.icon });
+                        $("#favorites-loader").hide();
+                    }
+                })
+            })
+
+            //remove from favorites
+            $(document).on("click", "#remove-from-favorites", function () {
+                $("#favorites-loader").show();
+                $(this).parent().hide();
+                $.ajax({
+                    url: "/favorite/removefromfavorites",
+                    data: { bookId: @Model.Book.Id},
+                    success: function (res) {
+                        console.log("ffrf");
+                        console.log(res);
                         swal(res.data, "", { icon: res.icon });
                         $("#favorites-loader").hide();
                     }
