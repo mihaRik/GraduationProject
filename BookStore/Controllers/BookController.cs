@@ -118,18 +118,41 @@ namespace BookStore.Controllers
 
         public async Task<IActionResult> GetBooks()
         {
-            return View();
-        }
-
-        public async Task<IActionResult> GetBooksAPI(int start, int length)
-        {
-            var model = new
+            var model = new BookViewModel
             {
-                total = _db.Books.Count(),
-                items = _db.Books.Skip(start).Take(length),
+                Authors = _db.Authors,
+                Categories = _db.Categories
             };
 
-            return Json(model);
+            return View(model);
+        }
+
+        public async Task<IActionResult> GetBooksAPI(string search, int page = 1, int catId = -1, int authorId = -1, int rate = -1)
+        {
+            search = search == null ? "" : search.ToLower();
+
+            var rawBooks = _db.Books.Where(b => b.Title.ToLower().Contains(search))
+                                 .Where(b => b.Categories.Any(c => c.CategoryId == (catId == -1 ? c.CategoryId : catId)))
+                                 .Where(b => b.Authors.Any(a => a.AuthorId == (authorId == -1 ? a.AuthorId : authorId)));
+
+            if (rate != -1)
+            {
+                rawBooks = rawBooks.Where(b => b.Rating.Sum(r => r.RatingValue) / b.Rating.Count == rate);
+            }
+
+            var model = new BooksListViewModel
+            {
+                Books = rawBooks.OrderByDescending(b => b.Id).Skip((page - 1) * 12).Take(12),
+                Total = rawBooks.Count(),
+                PageCount = (int)Math.Ceiling((decimal)rawBooks.Count() / 12),
+                CurrentPage = page,
+                Search = search,
+                CategoryId = catId,
+                AuthorId = authorId,
+                Rate = rate
+            };
+
+            return PartialView("_BooksListPartial", model);
         }
     }
 }

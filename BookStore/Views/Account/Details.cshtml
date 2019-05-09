@@ -1,0 +1,99 @@
+﻿@model ApplicationUser
+@{
+    ViewData["Title"] = Model.UserName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link href="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.css" rel="stylesheet" type="text/css" />
+}
+
+<h2 class="mt-5">Hello <ins>@Model.UserName</ins></h2>
+<div class="ui divider"></div>
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-4">
+            <img src="@(Model.Image ?? "/images/no-image.png")" id="profile-image-preview" class="img-thumbnail" />
+
+            <div class="form-group d-none">
+                <input type="file" id="image-input" asp-for="Photo" accept="image/*" />
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+
+            <input type="button" id="button-change-image" value="Change profile photo" class="btn btn-outline-primary mt-2">
+        </div>
+        <div class="col-8">
+            <div class="form-group w-50">
+                <label asp-for="Firstname"></label>
+                <input type="text" asp-for="Firstname" class="form-control" />
+                <span asp-validation-for="Firstname" class="text-danger"></span>
+            </div>
+
+            <div class="form-group w-50">
+                <label asp-for="Lastname"></label>
+                <input type="text" asp-for="Lastname" class="form-control" />
+                <span asp-validation-for="Lastname" class="text-danger"></span>
+            </div>
+
+            <div class="form-group w-50">
+                <label asp-for="UserName"></label>
+                <input type="text" asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group w-50">
+                <label asp-for="Birthdate"></label>
+                <div class="ui calendar" id="birthdate">
+                    <div class="ui input left icon w-100">
+                        <i class="calendar icon"></i>
+                        <input type="text" placeholder="Birthdate" asp-for="Birthdate" class="form-control">
+                    </div>
+                </div>
+                <span asp-validation-for="Birthdate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group w-50">
+                <input type="submit" id="submit-change-image" value="Save changes" class="btn btn-outline-primary mt-2 float-right">
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            //birthdate picker
+            //$("#birthdate").datepicker();
+            $("#birthdate").calendar({
+                type: "date"
+            });
+
+            //testing
+            $(document).on("click", "#button-change-image", function () {
+                $("#submit-change-image").show(400);
+                $("#image-input").trigger("click");
+            })
+
+            //preview image
+            $("#image-input").change(function () {
+                readURL(this);
+            });
+
+            //preview image function
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#profile-image-preview').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        })
+    </script>
+}

@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using BookStore.Data;
+using BookStore.Extensions;
 using BookStore.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Controllers
 {
@@ -18,14 +21,20 @@ namespace BookStore.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
+        private readonly IHostingEnvironment _env;
+        private readonly BookContext _db;
 
         public AccountController(UserManager<ApplicationUser> userManager,
                                  SignInManager<ApplicationUser> signInManager,
-                                 IEmailSender emailSender)
+                                 IEmailSender emailSender,
+                                 IHostingEnvironment env,
+                                 BookContext db)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _env = env;
+            _db = db;
         }
 
         public IActionResult Login()
@@ -84,8 +93,8 @@ namespace BookStore.Controllers
 
             var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, code }, Request.Scheme);
 
-            await _emailSender.SendEmailAsync(registerModel.Email, "Agilli ol emaili-vu tesdiqle",
-                $"Bax bura bas ==> <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>buraaaaaaaaaaaaa</a>.");
+            await _emailSender.SendEmailAsync(registerModel.Email, "Email Confirmation",
+                $"You can confirm email ==> <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>here</a>.");
 
             return RedirectToAction(nameof(ConfirmInfo));
         }
@@ -128,6 +137,42 @@ namespace BookStore.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Details()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            return View(user);
+        }
+
+        [Authorize, HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Details(ApplicationUser user)
+        {
+            var userFromDb = await _userManager.GetUserAsync(User);
+            user.Id = userFromDb.Id;
+
+            if (user.Photo != null)
+            {
+                if (!user.Photo.IsPhoto())
+                {
+                    ModelState.AddModelError("Photo", "File must be image.");
+                    return View(user);
+                }
+
+                if (string.IsNullOrEmpty(userFromDb.Image))
+                {
+                    userFromDb.Image = await user.Photo.SavePhotoAsync(_env.WebRootPath, "profile");
+                }
+            }
+
+            //_db.Entry(userFromDb).State = EntityState.Modified;
+            _db.Entry(userFromDb).State = EntityState.Detached;
+            _db.Update(user);
+            await _db.SaveChangesAsync();
+
+            return View(userFromDb);
         }
     }
 }

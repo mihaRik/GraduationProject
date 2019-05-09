@@ -18,10 +18,10 @@ namespace BookStore.Models
             Favorites = new HashSet<BookFavoritePivot>();
         }
 
-        [StringLength(100), MinLength(3)]
+        [StringLength(100), MinLength(3, ErrorMessage = "Minimum length 3 symbols.")]
         public string Firstname { get; set; }
 
-        [StringLength(100), MinLength(3)]
+        [StringLength(100), MinLength(3, ErrorMessage = "Minimum length 3 symbols.")]
         public string Lastname { get; set; }
 
         public string Fullname

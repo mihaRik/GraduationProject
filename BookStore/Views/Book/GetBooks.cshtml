@@ -1,4 +1,4 @@
-﻿
+﻿@model BookViewModel
 @{
     ViewData["Title"] = "Books";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,30 +7,108 @@
 <h2>Books</h2>
 <div class="ui divider"></div>
 <div class="row">
-    <div class="col-2 border">filters</div>
-    <div class="col-10">
-        <div class="ui icon input float-right">
-            <input type="text" placeholder="Search...">
-            <i class="inverted circular search link icon"></i>
-        </div>
-        <div class="pagination-container">
-            <div class="ui pagination menu">
-                <a class="active item">
-                    1
-                </a>
-                <div class="disabled item">
-                    ...
+    <div class="col-2 border-right">
+        <div class="category-selector">
+            <p>Search by category</p>
+            <div class="ui fluid search selection dropdown category-dropdown">
+                <input type="hidden" name="category">
+                <i class="dropdown icon"></i>
+                <div class="default text">Select category</div>
+                <div class="menu">
+                    @foreach (var category in Model.Categories)
+                    {
+                        <div class="item" data-value="@category.Id">@category.Name</div>
+                    }
                 </div>
-                <a class="item">
-                    10
-                </a>
-                <a class="item">
-                    11
-                </a>
-                <a class="item">
-                    12
-                </a>
             </div>
+        </div>
+        <div class="ui divider"></div>
+        <div class="author-selector">
+            <p>Search by author</p>
+            <div class="ui fluid search selection dropdown author-dropdown">
+                <input type="hidden" name="author">
+                <i class="dropdown icon"></i>
+                <div class="default text">Select author</div>
+                <div class="menu">
+                    @foreach (var author in Model.Authors)
+                    {
+                        <div class="item" data-value="@author.Id">@author.Fullname</div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="ui divider"></div>
+        <div class="rate-selector">
+            <p>Search by rating</p>
+            <div class="ui form">
+                <div class="grouped fields">
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input type="radio" value="5" name="rating">
+                            <label>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                            </label>
+                        </div>
+                        <div class="ui radio checkbox">
+                            <input type="radio" value="4" name="rating">
+                            <label>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                            </label>
+                        </div>
+                        <div class="ui radio checkbox">
+                            <input type="radio" value="3" name="rating">
+                            <label>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                            </label>
+                        </div>
+                        <div class="ui radio checkbox">
+                            <input type="radio" value="2" name="rating">
+                            <label>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                            </label>
+                        </div>
+                        <div class="ui radio checkbox">
+                            <input type="radio" value="1" name="rating">
+                            <label>
+                                <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                                <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui divider"></div>
+    </div>
+    <div class="col-10">
+        <div class="search-container">
+            <div class="ui icon input float-right mb-3">
+                <input type="text" id="search" placeholder="Search...">
+                <i class="inverted circular search link icon"></i>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div id="books-content">
+            <img src="~/images/loader.gif" id="loader" class="mx-auto" style="display: none;" />
         </div>
     </div>
 </div>
@@ -38,11 +116,102 @@
 @section scripts{
     <script>
         $(document).ready(function () {
+            //rate selector
+            $(".ui.checkbox").checkbox({
+                onChange: function () {
+                    $("#loader").show();
+                    $.ajax({
+                        url: "/book/getbooksapi",
+                        data: {
+                            rate: $(this).val()
+                        },
+                        success: function (res) {
+                            $("#loader").hide();
+                            $("#books-content").html(res);
+                            $("#search").val($("#search-text").val());
+                        }
+                    })
+                }
+            })
+
+            //dropdown for category
+            $('.ui.category-dropdown').dropdown({
+                onChange: function (value, text, $selectedItem) {
+                    $("#loader").show();
+                    $.ajax({
+                        url: "/book/getbooksapi",
+                        data: {
+                            catId: value
+                        },
+                        success: function (res) {
+                            $("#loader").hide();
+                            $("#books-content").html(res);
+                            $("#search").val($("#search-text").val());
+                        }
+                    })
+                }
+            });
+
+            //dropdown for author
+            $('.ui.author-dropdown').dropdown({
+                onChange: function (value, text, $selectedItem) {
+                    $("#loader").show();
+                    $.ajax({
+                        url: "/book/getbooksapi",
+                        data: {
+                            authorId: value
+                        },
+                        success: function (res) {
+                            $("#loader").hide();
+                            $("#books-content").html(res);
+                            $("#search").val($("#search-text").val());
+                        }
+                    })
+                }
+            });
+
+            //search book
+            $(document).on("click", "i.search", function () {
+                $("#loader").show();
+                $.ajax({
+                    url: "/book/getbooksapi",
+                    data: { search: $("#search").val() },
+                    success: function (res) {
+                        $("#loader").hide();
+                        $("#books-content").html(res);
+                        $("#search").val($("#search-text").val());
+                    }
+                })
+            })
+
+            //get books on page load
+            $("#loader").show();
             $.ajax({
                 url: "/book/getbooksapi",
                 success: function (res) {
-
+                    $("#loader").hide();
+                    $("#books-content").html(res);
                 }
+            })
+
+            //get books from N page
+            $(document).on("click", ".page", function () {
+                $("#loader").show();
+                $.ajax({
+                    url: "/book/getbooksapi",
+                    data: {
+                        page: $(this).text(),
+                        search: $("#search-text").val(),
+                        catId: $("#category-id").val(),
+                        authorId: $("#author-id").val(),
+                        rate: $("#rate-id").val()
+                    },
+                    success: function (res) {
+                        $("#loader").hide();
+                        $("#books-content").html(res);
+                        $("#search").val($("#search-text").val());
+                    }
+                })
             })
         })
     </script>

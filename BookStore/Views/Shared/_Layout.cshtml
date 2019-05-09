@@ -37,7 +37,7 @@
                     </li>
                 }
                 <li class="nav-item active">
-                    <a class="nav-link" asp-controller="home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" asp-controller="home" asp-action="index">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" asp-controller="book" asp-action="getbooks">Books</a>
@@ -61,7 +61,7 @@
                         <div id="favorites-container">
                         </div>
                     </li>
-                    <li class="nav-item"><a asp-controller="Account" asp-action="Details" class="nav-link">Hello, @User.Identity.Name</a></li>
+                    <li class="nav-item"><a asp-controller="account" asp-action="details" class="nav-link">Hello, @User.Identity.Name</a></li>
                     <li class="nav-item">
                         <form action="/Account/Logout" method="post">
                             <input type="submit" value="Logout" class="nav-link" style="background: transparent; border: none;" />
@@ -70,8 +70,8 @@
                 }
                 else
                 {
-                    <li class="nav-item"><a asp-controller="Account" asp-action="Login" class="nav-link">Login</a></li>
-                    <li class="nav-item"><a asp-controller="Account" asp-action="Register" class="nav-link">Register</a></li>
+                    <li class="nav-item"><a asp-controller="account" asp-action="login" class="nav-link">Login</a></li>
+                    <li class="nav-item"><a asp-controller="account" asp-action="register" class="nav-link">Register</a></li>
                 }
             </ul>
         </div>
