@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookStore.Models;
+using BookStore.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace BookStore.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Rating> Rating { get; set; }
         public DbSet<BookFavoritePivot> BookFavorites { get; set; }
+        public DbSet<Banner> Banners { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using BookStore.Data;
 using BookStore.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.Controllers
 {
@@ -25,7 +26,7 @@ namespace BookStore.Controllers
             _db = db;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var model = new HomeIndexViewModel
             {
@@ -33,20 +34,21 @@ namespace BookStore.Controllers
                 MostCommentedBooks = _db.Books.OrderByDescending(b => b.Comments.Count).Take(4),
                 MostFavoriteBooks = _db.Books.OrderByDescending(b => b.Favorites.Count).Take(4),
                 MostViewedBooks = _db.Books.OrderByDescending(b => b.ViewCount).Take(4),
-                MostRatedBooks = _db.Books.OrderByDescending(b => b.Rating.Count).Take(4)
+                MostRatedBooks = _db.Books.OrderByDescending(b => b.Rating.Count).Take(4),
+                Banner = await _db.Banners.FirstOrDefaultAsync()
             };
 
             return View(model);
         }
 
-        public IActionResult About()
+        public async Task<IActionResult> About()
         {
-            return View();
+            return View(await _db.Banners.FirstOrDefaultAsync());
         }
 
-        public IActionResult Contact()
+        public async Task<IActionResult> Contact()
         {
-            return View();
+            return View(await _db.Banners.FirstOrDefaultAsync());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

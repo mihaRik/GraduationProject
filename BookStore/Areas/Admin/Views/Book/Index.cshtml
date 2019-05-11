@@ -31,12 +31,26 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script>
         $(document).ready(function () {
-            $("#books").DataTable({
+            //data table
+            var table = $("#books").DataTable();
+
+            table({
                 serverSide: true,
                 processing: true,
-                ajax: "/Admin/Book/GetBooks",
+                ajax: "/admin/book/getbooks",
                 ordering: false
             });
+
+            //delete book
+            $(document).on("click", ".delete", function () {
+                $.ajax({
+                    url: "/admin/book/delete",
+                    data: { bookId: $(this).data("id") },
+                    success: function () {
+                        table.redraw();
+                    }
+                })
+            })
         })
     </script>
 }

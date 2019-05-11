@@ -16,5 +16,7 @@ namespace BookStore.Models.ViewModels
         public IEnumerable<Book> MostViewedBooks { get; set; }
 
         public IEnumerable<Book> MostRatedBooks { get; set; }
+
+        public Banner Banner { get; set; }
     }
 }

@@ -62,7 +62,7 @@ namespace BookStore.Areas.Admin.Controllers
                     b.PageCount,
                     $"<img src='{b.Images.ToList()[0].ImageUrl}' class='img-thumbnail' />",
                     $"<a href='/admin/book/edit/{b.Id}' class='btn btn-outline-info'><i class='far fa-edit'></i></a>" +
-                    $"<a href='/admin/book/delete/{b.Id}' class='btn btn-outline-danger'><i class='far fa-trash-alt'></i></a>"
+                    $"<a data-id='{b.Id}' class='btn btn-outline-danger delete'><i class='far fa-trash-alt'></i></a>"
                 })
             };
 

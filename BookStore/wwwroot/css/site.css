@@ -60,3 +60,11 @@ body {
 .show-favs{
     transform: rotateX(0)!important;
 }
+
+footer{
+    padding: 20px 0;
+}
+
+footer a{
+    color: white;
+}

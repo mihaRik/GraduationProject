@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using BookStore.Data;
 using BookStore.Extensions;
 using BookStore.Models;
+using static BookStore.Utility.DeleteFile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace BookStore.Controllers
 {
@@ -151,7 +153,6 @@ namespace BookStore.Controllers
         public async Task<IActionResult> Details(ApplicationUser user)
         {
             var userFromDb = await _userManager.GetUserAsync(User);
-            user.Id = userFromDb.Id;
 
             if (user.Photo != null)
             {
@@ -161,15 +162,19 @@ namespace BookStore.Controllers
                     return View(user);
                 }
 
-                if (string.IsNullOrEmpty(userFromDb.Image))
+                if (!string.IsNullOrEmpty(userFromDb.Image))
                 {
-                    userFromDb.Image = await user.Photo.SavePhotoAsync(_env.WebRootPath, "profile");
+                    Delete(Path.Combine(_env.WebRootPath, userFromDb.Image));
                 }
+
+                userFromDb.Image = await user.Photo.SavePhotoAsync(_env.WebRootPath, "profile");
             }
 
-            //_db.Entry(userFromDb).State = EntityState.Modified;
-            _db.Entry(userFromDb).State = EntityState.Detached;
-            _db.Update(user);
+            userFromDb.Firstname = user.Firstname;
+            userFromDb.Lastname = user.Lastname;
+            userFromDb.Birthdate = user.Birthdate;
+
+            _db.Entry(userFromDb).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
             return View(userFromDb);

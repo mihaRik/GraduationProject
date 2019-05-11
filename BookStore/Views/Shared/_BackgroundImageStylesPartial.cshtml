@@ -1,0 +1,26 @@
+﻿@model Banner
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<style>
+    #background-img {
+        background-image: url('@Model.Image');
+        height: 500px;
+        background-size: cover;
+        margin-bottom: 30px;
+        background-color: rgba(0, 0, 0, .5);
+        background-blend-mode: overlay;
+        position: relative;
+    }
+
+    #background-img::after {
+        content: '@Model.Title';
+        position: absolute;
+        color: white;
+        font-size: 35px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>

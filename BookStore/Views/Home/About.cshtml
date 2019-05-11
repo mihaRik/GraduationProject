@@ -1,6 +1,16 @@
-﻿@{
+﻿@model Banner
+@{
     ViewData["Title"] = "About";
 }
+
+@section styles{
+    <partial name="_BackgroundImageStylesPartial" model="Model" />
+}
+
+@*banner section start*@
+<div class="row" id="background-img"></div>
+@*banner section end*@
+
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 

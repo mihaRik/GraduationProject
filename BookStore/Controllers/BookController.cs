@@ -52,7 +52,8 @@ namespace BookStore.Controllers
             {
                 Book = book,
                 RecommendedBooks = recommendedBook,
-                CanAddToFavorites = canAddToFavorites
+                CanAddToFavorites = canAddToFavorites,
+                Banner = await _db.Banners.FirstOrDefaultAsync()
             };
 
             return View(model);
@@ -121,7 +122,8 @@ namespace BookStore.Controllers
             var model = new BookViewModel
             {
                 Authors = _db.Authors,
-                Categories = _db.Categories
+                Categories = _db.Categories,
+                Banner = await _db.Banners.FirstOrDefaultAsync()
             };
 
             return View(model);

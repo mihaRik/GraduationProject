@@ -11,8 +11,8 @@
 <h2 class="mt-5">Hello <ins>@Model.UserName</ins></h2>
 <div class="ui divider"></div>
 <form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="row">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="col-4">
             <img src="@(Model.Image ?? "/images/no-image.png")" id="profile-image-preview" class="img-thumbnail" />
 

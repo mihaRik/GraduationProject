@@ -14,5 +14,7 @@ namespace BookStore.Models.ViewModels
         public bool CanReview { get; set; }
 
         public bool CanAddToFavorites { get; set; }
+
+        public Banner Banner { get; set; }
     }
 }

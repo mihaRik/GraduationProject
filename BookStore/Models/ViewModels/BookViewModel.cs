@@ -17,5 +17,7 @@ namespace BookStore.Models.ViewModels
         public IEnumerable<Category> Categories { get; set; }
 
         public IEnumerable<Author> Authors { get; set; }
+
+        public Banner Banner { get; set; }
     }
 }

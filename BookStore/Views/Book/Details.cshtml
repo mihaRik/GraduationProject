@@ -7,6 +7,7 @@
 @section styles{
     <link href="~/lib/owl/dist/assets/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/lib/owl/dist/assets/owl.theme.default.min.css" rel="stylesheet" />
+    <partial name="_BackgroundImageStylesPartial" model="Model.Banner" />
     <style>
         .rating {
             --uiRatingSize: var(--ratingSize, 20px);
@@ -71,6 +72,11 @@
         }
     </style>
 }
+
+@*banner section start*@
+<div class="row" id="background-img"></div>
+<div class="ui divider"></div>
+@*banner section end*@
 
 @*book details start*@
 <div class="row">
@@ -236,7 +242,7 @@
                         <h5 class="card-title">@book.Title</h5>
                         <p class="card-text" style="min-height: 50px;">
                             @(book.Description?.Length > 90 ?
-                                                                                                                                                                                                                                                      book.Description.Substring(0, 90) + "..." : book.Description)
+                                                                                                                                                                                                                                                                      book.Description.Substring(0, 90) + "..." : book.Description)
                         </p>
                         <a asp-controller="book" asp-action="details" asp-route-id="@book.Id"
                            class="btn btn-primary">See details</a>

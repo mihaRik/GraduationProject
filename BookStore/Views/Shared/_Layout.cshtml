@@ -23,7 +23,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #5FAD56;">
-        <a class="navbar-brand" asp-controller="Home" asp-action="Index">Book store</a>
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">BookStore</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -80,11 +80,33 @@
 
     <div class="container body-content" style="padding-top: 30px;">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - BookStore by <ins>mihaRik</ins></p>
-        </footer>
+        @*        <hr />*@
     </div>
+    <footer style="background-color: #5FAD56;">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-4">
+                    <h3><a asp-controller="home" asp-action="index">BookStore</a></h3>
+                </div>
+                <div class="col-4">
+                    <ul class="d-flex " style="list-style-type: none;">
+                        <li class="mr-3"><a class="nav-link" asp-controller="book" asp-action="getbooks">Books</a></li>
+                        <li class="mr-3"><a class="nav-link" asp-controller="home" asp-action="about">About</a></li>
+                        <li class="mr-3"><a class="nav-link" asp-controller="home" asp-action="contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-4">
+                    <ul class="d-flex float-right" style="list-style-type: none; font-size: 20px;">
+                        <li class="ml-3"><a href="#"><i class="fab fa-facebook"></i></a></li>
+                        <li class="ml-3"><a href="#"><i class="fab fa-instagram"></i></a></li>
+                        <li class="ml-3"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                        <li class="ml-3"><a href="#"><i class="fas fa-globe"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <p class="text-center">&copy; @DateTime.Now.Year - BookStore by <ins>mihaRik</ins></p>
+        </div>
+    </footer>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

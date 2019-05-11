@@ -6,7 +6,13 @@
 @section styles{
     <link href="~/lib/owl/dist/assets/owl.carousel.min.css" rel="stylesheet" />
     <link href="~/lib/owl/dist/assets/owl.theme.default.min.css" rel="stylesheet" />
+    <partial name="_BackgroundImageStylesPartial" model="Model.Banner" />
 }
+
+@*banner section start*@
+<div class="row" id="background-img"></div>
+@*banner section end*@
+
 
 @*slider section start*@
 <div class="row">
@@ -44,7 +50,7 @@
                         }
                         <p class="text-secondary mt-2">
                             @(slide.Description?.Length > 300 ?
-                                                                                                                              slide.Description.Substring(0, 200) + "..." : slide.Description)
+                                                                                                                                                                              slide.Description.Substring(0, 200) + "..." : slide.Description)
                         </p>
                         <a asp-controller="book" asp-action="details" asp-route-id="@slide.Id"
                            class="btn btn-outline-success position-absolute" style="bottom: 30px; right: 20px;">See details</a>
@@ -111,7 +117,7 @@
                             <h5 class="card-title">@book.Title</h5>
                             <p class="card-text" style="min-height: 50px;">
                                 @(book.Description?.Length > 90 ?
-                                                                  book.Description.Substring(0, 90) + "..." : book.Description)
+                                                                                                                  book.Description.Substring(0, 90) + "..." : book.Description)
                             </p>
                             <p class="text-info text-center">Average rating: @book.AvgRating.ToString("#.##")</p>
                             <a asp-controller="book" asp-action="details" asp-route-id="@book.Id"
@@ -140,7 +146,8 @@
                 $('.ui.search')
                     .search({
                         type: 'category',
-                        minCharacters: 1,
+                        searchOnFocus: false,
+                        minCharacters: 3,
                         apiSettings: {
                             onResponse: function (result) {
                                 var response = {
