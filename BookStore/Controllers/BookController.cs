@@ -129,7 +129,7 @@ namespace BookStore.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> GetBooksAPI(string search, int page = 1, int catId = -1, int authorId = -1, int rate = -1)
+        public IActionResult GetBooksAPI(string search, int page = 1, int catId = -1, int authorId = -1, int rate = -1)
         {
             search = search == null ? "" : search.ToLower();
 

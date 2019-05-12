@@ -165,7 +165,7 @@ namespace BookStore.Controllers
 
                         var image3 = new Image
                         {
-                            ImageUrl = volume.ImageLinks.SmallThumbnail,
+                            ImageUrl = volume.ImageLinks.Thumbnail,
                             BookId = book.Id
                         };
                         if (!string.IsNullOrEmpty(image3.ImageUrl))
@@ -176,7 +176,7 @@ namespace BookStore.Controllers
 
                         var image4 = new Image
                         {
-                            ImageUrl = volume.ImageLinks.Thumbnail,
+                            ImageUrl = volume.ImageLinks.SmallThumbnail,
                             BookId = book.Id
                         };
                         if (!string.IsNullOrEmpty(image4.ImageUrl))

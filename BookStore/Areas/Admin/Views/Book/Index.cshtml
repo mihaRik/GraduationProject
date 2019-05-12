@@ -28,29 +28,32 @@
 </table>
 
 @section scripts{
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script>
+        var table;
         $(document).ready(function () {
             //data table
-            var table = $("#books").DataTable();
-
-            table({
-                serverSide: true,
-                processing: true,
-                ajax: "/admin/book/getbooks",
-                ordering: false
-            });
+            table = $("#books").DataTable
+                ({
+                    serverSide: true,
+                    processing: true,
+                    ajax: "/admin/book/getbooks",
+                    ordering: false
+                });
 
             //delete book
-            $(document).on("click", ".delete", function () {
-                $.ajax({
-                    url: "/admin/book/delete",
-                    data: { bookId: $(this).data("id") },
-                    success: function () {
-                        table.redraw();
-                    }
-                })
-            })
         })
+
+        function deleteBook(bookId) {
+            $.ajax({
+                url: "/admin/book/delete",
+                data: { bookId: bookId },
+                success: function (res) {
+                    table.draw();
+                    swal(res.title, res.data, { icon: res.icon });
+                }
+            })
+        }
     </script>
 }

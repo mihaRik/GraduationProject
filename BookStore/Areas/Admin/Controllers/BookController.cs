@@ -17,7 +17,7 @@ using static BookStore.Utility.DeleteFile;
 namespace BookStore.Areas.Admin.Controllers
 {
     [Area(Roles.Admin)]
-    //[Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public class BookController : Controller
     {
         private readonly BookContext _db;
@@ -62,7 +62,7 @@ namespace BookStore.Areas.Admin.Controllers
                     b.PageCount,
                     $"<img src='{b.Images.ToList()[0].ImageUrl}' class='img-thumbnail' />",
                     $"<a href='/admin/book/edit/{b.Id}' class='btn btn-outline-info'><i class='far fa-edit'></i></a>" +
-                    $"<a data-id='{b.Id}' class='btn btn-outline-danger delete'><i class='far fa-trash-alt'></i></a>"
+                    $"<a href='javascript:deleteBook({b.Id})' class='btn btn-outline-danger delete'><i class='far fa-trash-alt'></i></a>"
                 })
             };
 
@@ -325,6 +325,35 @@ namespace BookStore.Areas.Admin.Controllers
             };
 
             return Json(result);
+        }
+
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteBook(int bookId)
+        {
+            var res = new
+            {
+                code = 404,
+                title = "Something goes wrong.",
+                data = "Please try again later.",
+                icon = "error"
+            };
+
+            var book = await _db.Books.FindAsync(bookId);
+
+            if (book == null) return Json(res);
+
+            _db.Entry(book).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+
+            res = new
+            {
+                code = 200,
+                title = $"{book.Title}",
+                data = "Book was deleted successfully",
+                icon = "success"
+            };
+
+            return Json(res);
         }
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using BookStore.Data;
 using BookStore.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace BookStore.Controllers
 {
@@ -19,11 +20,13 @@ namespace BookStore.Controllers
     {
         private readonly IConfiguration _config;
         private readonly BookContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(IConfiguration config, BookContext db)
+        public HomeController(IConfiguration config, BookContext db, UserManager<ApplicationUser> userManager)
         {
             _config = config;
             _db = db;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -48,7 +51,38 @@ namespace BookStore.Controllers
 
         public async Task<IActionResult> Contact()
         {
-            return View(await _db.Banners.FirstOrDefaultAsync());
+            var model = new ContactViewModel
+            {
+                Banner = await _db.Banners.FirstOrDefaultAsync(),
+                User = User.Identity.IsAuthenticated ? await _userManager.GetUserAsync(User) : null,
+                IsSent = false
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Contact(Contact contact)
+        {
+            var model = new ContactViewModel
+            {
+                Banner = await _db.Banners.FirstOrDefaultAsync(),
+                User = User.Identity.IsAuthenticated ? await _userManager.GetUserAsync(User) : null,
+                IsSent = false
+            };
+
+            if (!ModelState.IsValid)
+            {
+                model.Contact = contact;
+                return View(model);
+            }
+
+            await _db.Contacts.AddAsync(contact);
+            await _db.SaveChangesAsync();
+
+            model.IsSent = true;
+
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

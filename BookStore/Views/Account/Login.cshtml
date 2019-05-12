@@ -3,10 +3,20 @@
     ViewData["Title"] = "Login";
 }
 
+@section styles{
+    <style>
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+}
+
 <h2>Login</h2>
 
 <div class="row">
-    <div class="col-6">
+    <div class="col-sm-6">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 

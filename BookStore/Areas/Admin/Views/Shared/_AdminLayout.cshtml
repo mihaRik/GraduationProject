@@ -15,7 +15,10 @@
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
@@ -32,19 +35,19 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item @(Url.ActionContext.HttpContext.Request.Path.Value.ToLower().Contains("book") ? "active" : null)">
-                    <a class="nav-link" asp-area="Admin" asp-controller="Book" asp-action="Index">Book <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" asp-area="admin" asp-controller="book" asp-action="index">Book <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item @(Url.ActionContext.HttpContext.Request.Path.Value.ToLower().Contains("category") ? "active" : null)">
-                    <a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="Index">Category <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" asp-area="admin" asp-controller="category" asp-action="index">Category <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item @(Url.ActionContext.HttpContext.Request.Path.Value.ToLower().Contains("author") ? "active" : null)">
-                    <a class="nav-link" asp-area="Admin" asp-controller="Author" asp-action="Index">Author <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" asp-area="admin" asp-controller="author" asp-action="index">Author <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a asp-controller="Account" asp-action="Details" class="nav-link">Hello, @User.Identity.Name</a></li>
+                <li class="nav-item"><a href="/account/details" class="nav-link">Hello, @User.Identity.Name</a></li>
                 <li class="nav-item">
-                    <form action="/Account/Logout" method="post">
+                    <form action="~/account/logout" method="post">
                         <input type="submit" value="Logout" class="nav-link" style="background: transparent; border: none;" />
                     </form>
                 </li>
@@ -73,12 +76,11 @@
                 crossorigin="anonymous"
                 integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
         </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
-        </script>
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                crossorigin="anonymous"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 

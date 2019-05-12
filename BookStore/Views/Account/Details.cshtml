@@ -6,43 +6,56 @@
 
 @section styles{
     <link href="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #form {
+            margin-bottom: 200px;
+        }
+    </style>
 }
 
 <h2 class="mt-5">Hello <ins>@Model.UserName</ins></h2>
 <div class="ui divider"></div>
 <form method="post" enctype="multipart/form-data">
     <div asp-validation-summary="All" class="text-danger"></div>
-    <div class="row">
-        <div class="col-4">
-            <img src="@(Model.Image ?? "/images/no-image.png")" id="profile-image-preview" class="img-thumbnail" />
+    <div id="form" class="row mb-sm-0">
+        <div class="col-sm-4 mb-3">
+            <div class="col-sm-12">
+                <img src="@(Model.Image ?? "/images/no-image.png")" id="profile-image-preview" class="img-thumbnail" />
 
-            <div class="form-group d-none">
-                <input type="file" id="image-input" asp-for="Photo" accept="image/*" />
-                <span asp-validation-for="Photo" class="text-danger"></span>
+                <div class="form-group d-none">
+                    <input type="file" id="image-input" asp-for="Photo" accept="image/*" />
+                    <span asp-validation-for="Photo" class="text-danger"></span>
+                </div>
+
+                <input type="button" id="button-change-image" value="Change profile photo" class="btn btn-outline-primary mt-2">
             </div>
-
-            <input type="button" id="button-change-image" value="Change profile photo" class="btn btn-outline-primary mt-2">
         </div>
-        <div class="col-8">
-            <div class="form-group w-50">
+        <div class="col-sm-8">
+            <div class="form-group col-sm-8">
                 <label asp-for="Firstname"></label>
                 <input type="text" asp-for="Firstname" class="form-control" />
                 <span asp-validation-for="Firstname" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-8">
                 <label asp-for="Lastname"></label>
                 <input type="text" asp-for="Lastname" class="form-control" />
                 <span asp-validation-for="Lastname" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-8">
                 <label asp-for="UserName"></label>
                 <input type="text" asp-for="UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-8">
                 <label asp-for="Birthdate"></label>
                 <div class="ui calendar" id="birthdate">
                     <div class="ui input left icon w-100">
@@ -53,7 +66,7 @@
                 <span asp-validation-for="Birthdate" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-6">
                 <input type="submit" id="submit-change-image" value="Save changes" class="btn btn-outline-primary mt-2 float-right">
             </div>
         </div>

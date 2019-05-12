@@ -27,6 +27,7 @@ namespace BookStore.Data
         public DbSet<Rating> Rating { get; set; }
         public DbSet<BookFavoritePivot> BookFavorites { get; set; }
         public DbSet<Banner> Banners { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

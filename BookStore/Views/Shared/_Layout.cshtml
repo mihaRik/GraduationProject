@@ -14,7 +14,9 @@
     <environment exclude="Development">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+              crossorigin="anonymous"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
@@ -39,13 +41,13 @@
                 <li class="nav-item active">
                     <a class="nav-link" asp-controller="home" asp-action="index">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item @(Url.ActionContext.HttpContext.Request.Path.Value.ToLower().Contains("book") ? "active" : null)">
                     <a class="nav-link" asp-controller="book" asp-action="getbooks">Books</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item @(Url.ActionContext.HttpContext.Request.Path.Value.ToLower().Contains("about") ? "active" : null)">
                     <a class="nav-link" asp-controller="home" asp-action="about">About</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item @(Url.ActionContext.HttpContext.Request.Path.Value.ToLower().Contains("contact") ? "active" : null)">
                     <a class="nav-link" asp-controller="home" asp-action="contact">Contact</a>
                 </li>
             </ul>
@@ -61,7 +63,9 @@
                         <div id="favorites-container">
                         </div>
                     </li>
-                    <li class="nav-item"><a asp-controller="account" asp-action="details" class="nav-link">Hello, @User.Identity.Name</a></li>
+                    <li class="nav-item @(Url.ActionContext.HttpContext.Request.Path.Value.ToLower().Contains("account") ? "active" : null)">
+                        <a asp-controller="account" asp-action="details" class="nav-link">Hello, @User.Identity.Name</a>
+                    </li>
                     <li class="nav-item">
                         <form action="/Account/Logout" method="post">
                             <input type="submit" value="Logout" class="nav-link" style="background: transparent; border: none;" />
@@ -80,27 +84,26 @@
 
     <div class="container body-content" style="padding-top: 30px;">
         @RenderBody()
-        @*        <hr />*@
     </div>
     <footer style="background-color: #5FAD56;">
         <div class="container">
             <div class="row justify-content-between">
-                <div class="col-4">
+                <div class="col-sm-4">
                     <h3><a asp-controller="home" asp-action="index">BookStore</a></h3>
                 </div>
-                <div class="col-4">
+                <div class="col-sm-4">
                     <ul class="d-flex " style="list-style-type: none;">
                         <li class="mr-3"><a class="nav-link" asp-controller="book" asp-action="getbooks">Books</a></li>
                         <li class="mr-3"><a class="nav-link" asp-controller="home" asp-action="about">About</a></li>
                         <li class="mr-3"><a class="nav-link" asp-controller="home" asp-action="contact">Contact</a></li>
                     </ul>
                 </div>
-                <div class="col-4">
+                <div class="col-sm-4">
                     <ul class="d-flex float-right" style="list-style-type: none; font-size: 20px;">
-                        <li class="ml-3"><a href="#"><i class="fab fa-facebook"></i></a></li>
-                        <li class="ml-3"><a href="#"><i class="fab fa-instagram"></i></a></li>
-                        <li class="ml-3"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                        <li class="ml-3"><a href="#"><i class="fas fa-globe"></i></a></li>
+                        <li class="ml-3"><a href="https://www.facebook.com/miharik"><i class="fab fa-facebook"></i></a></li>
+                        <li class="ml-3"><a href="https://www.instagram.com/miharik"><i class="fab fa-instagram"></i></a></li>
+                        <li class="ml-3"><a href="https://www.linkedin.com/in/rahim-teymurov-64516a183"><i class="fab fa-linkedin-in"></i></a></li>
+                        <li class="ml-3"><a href="https://smartsolutions.az/"><i class="fas fa-globe"></i></a></li>
                     </ul>
                 </div>
             </div>
@@ -121,12 +124,11 @@
                 crossorigin="anonymous"
                 integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
         </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
-        </script>
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>

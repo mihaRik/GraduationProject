@@ -51,7 +51,7 @@ namespace BookStore.Models
                     if (!string.IsNullOrEmpty(image.ImageUrl)) return image.ImageUrl;
                 }
 
-                return "img/no-image.png";
+                return "images/no-image.png";
             }
         }
 

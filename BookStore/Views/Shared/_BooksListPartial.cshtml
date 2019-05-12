@@ -13,8 +13,14 @@
 }
 else
 {
-    <div class="books-container d-flex justify-content-between flex-wrap">
+    <div class="books-container d-flex justify-content-around flex-wrap">
         <partial name="_BooksPartial" model="Model.Books" />
+    </div>
+    <div class="ui segment" style="display: none;">
+        <p></p>
+        <div class="ui inverted active dimmer">
+            <div class="ui loader"></div>
+        </div>
     </div>
     @if (Model.PageCount > 1)
     {

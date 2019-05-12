@@ -11,23 +11,23 @@
 <h2>Add new one book</h2>
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-6">
                 <label asp-for="Book.Title"></label><span class="text-danger"> *</span>
                 <input type="text" asp-for="Book.Title" class="form-control" required />
                 <span asp-validation-for="Book.Title" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-6">
                 <label asp-for="Book.Subtitle"></label>
                 <input type="text" asp-for="Book.Subtitle" class="form-control" />
                 <span asp-validation-for="Book.Subtitle" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group col-sm-12">
                 <label asp-for="Book.Categories"></label><span class="text-danger"> *</span>
                 <input type="text" placeholder="Search for categories" id="catSearch" class="float-right form-control" style="width: 200px;" />
                 <button type="button" class="btn btn-primary float-right mr-5" id="add-new-category">Add new category</button>
@@ -37,7 +37,7 @@
                 <span asp-validation-for="Book.Categories" class="text-danger"></span>
             </div>
 
-            <div class="form-group mt-5">
+            <div class="form-group col-sm-12 mt-5">
                 <label asp-for="Book.Authors"></label><span class="text-danger"> *</span>
                 <input type="text" placeholder="Search for authors" id="authorSearch" class="float-right form-control" style="width: 200px;" />
                 <button type="button" class="btn btn-primary float-right mr-5" id="add-new-author">Add new author</button>
@@ -47,37 +47,37 @@
                 <span asp-validation-for="Book.Authors" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-6">
                 <label asp-for="Book.Description"></label>
                 <textarea asp-for="Book.Description" rows="10"  class="form-control"></textarea>
                 <span asp-validation-for="Book.Description" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-6">
                 <label asp-for="Book.Language"></label><span class="text-danger"> *</span>
                 <input type="text" asp-for="Book.Language" class="form-control" required />
                 <span asp-validation-for="Book.Language" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-6">
                 <label asp-for="Book.Publisher"></label><span class="text-danger"> *</span>
                 <input type="text" asp-for="Book.Publisher" class="form-control" required />
                 <span asp-validation-for="Book.Publisher" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-6">
                 <label asp-for="Book.PublishedDate"></label><span class="text-danger"> *</span>
                 <input type="datetime" asp-for="Book.PublishedDate" required class="form-control" id="publishedDate" />
                 <span asp-validation-for="Book.PublishedDate" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-6">
                 <label asp-for="Book.PageCount"></label><span class="text-danger"> *</span>
                 <input type="number" asp-for="Book.PageCount" class="form-control" required />
                 <span asp-validation-for="Book.PageCount" class="text-danger"></span>
             </div>
 
-            <div class="form-group w-50">
+            <div class="form-group col-sm-6">
                 <label asp-for="Book.Photos"></label>
                 <input type="file" asp-for="Book.Photos" class="form-control" multiple accept="image/*" />
                 <span asp-validation-for="Book.Photos" class="text-danger"></span>

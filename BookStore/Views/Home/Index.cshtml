@@ -16,7 +16,7 @@
 
 @*slider section start*@
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <div class="search float-left">
             <div class="ui category search">
                 <div class="ui icon input">
@@ -30,12 +30,12 @@
 </div>
 
 <div class="row mt-5">
-    <div class="col-12" style="height: 400px;">
+    <div class="col-sm-12" style="height: 400px;">
         <div class="owl-carousel">
             @foreach (var slide in Model.Slider)
             {
                 <div class="row px-2">
-                    <div class="col-8">
+                    <div class="col-6 col-sm-8">
                         <h2>@slide.Title</h2>
                         @foreach (var author in slide.Authors)
                         {
@@ -53,9 +53,9 @@
                                                                                                                                                                               slide.Description.Substring(0, 200) + "..." : slide.Description)
                         </p>
                         <a asp-controller="book" asp-action="details" asp-route-id="@slide.Id"
-                           class="btn btn-outline-success position-absolute" style="bottom: 30px; right: 20px;">See details</a>
+                           class="btn btn-outline-success position-absolute mt-5 mt-sm-0" style="bottom: 30px; right: 20px;">See details</a>
                     </div>
-                    <div class="col-4">
+                    <div class="col-6 col-sm-4">
                         <a asp-controller="book" asp-action="details" asp-route-id="@slide.Id">
                             <img src="@slide.DefaultImage" class="img-thumbnail" style="height: 300px; object-fit: contain;" />
                         </a>
@@ -69,9 +69,9 @@
 
 @*most viewed books section start*@
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <h3 class="text-center font-weight-bold mb-3">Most viewed books</h3>
-        <div class="most-viewed-container d-flex justify-content-between">
+        <div class="most-viewed-container d-flex justify-content-around flex-wrap">
             <partial name="_BooksPartial" model="Model.MostViewedBooks" />
         </div>
     </div>
@@ -80,9 +80,9 @@
 
 @*most commented books section start*@
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <h3 class="text-center font-weight-bold mb-3 mt-5">Most commented books</h3>
-        <div class="most-viewed-container d-flex justify-content-between">
+        <div class="most-viewed-container d-flex justify-content-around flex-wrap">
             <partial name="_BooksPartial" model="Model.MostCommentedBooks" />
         </div>
     </div>
@@ -91,9 +91,9 @@
 
 @*most favorite books section start*@
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <h3 class="text-center font-weight-bold mb-3 mt-5">Most favorite books</h3>
-        <div class="most-viewed-container d-flex justify-content-between">
+        <div class="most-viewed-container d-flex justify-content-around flex-wrap">
             <partial name="_BooksPartial" model="Model.MostFavoriteBooks" />
         </div>
     </div>
@@ -102,9 +102,9 @@
 
 @*most rated books section start*@
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <h3 class="text-center font-weight-bold mb-3 mt-5">Most rated books</h3>
-        <div class="most-viewed-container d-flex justify-content-between">
+        <div class="most-viewed-container d-flex justify-content-around flex-wrap">
             @foreach (var book in Model.MostRatedBooks)
             {
                 <div class="book-item mb-3">

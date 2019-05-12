@@ -80,9 +80,9 @@
 
 @*book details start*@
 <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
         <div class="row my-3">
-            <div class="col-4">
+            <div class="col-sm-4">
                 <div class="owl-carousel book-images">
                     @foreach (var img in Model.Book.Images)
                     {
@@ -92,7 +92,7 @@
                     }
                 </div>
             </div>
-            <div class="col-8">
+            <div class="col-sm-8">
                 <h2 class="text-primary">
                     @(Model.Book.Title)
                     @if (User.Identity.IsAuthenticated)
@@ -170,12 +170,12 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-4 rating-info">
+            <div class="col-sm-4 rating-info">
                 <div class="reviews-info">
                     <partial name="_ReviewsPartial" model="Model.Book" />
                 </div>
             </div>
-            <div class="col-8">
+            <div class="col-sm-8">
                 <h3 class="float-left">Comments</h3>
                 @if (User.Identity.IsAuthenticated)
                 {
@@ -227,10 +227,10 @@
 
 @*similar books start*@
 <div class="row mt-5">
-    <div class="col-12">
+    <div class="col-sm-12">
         <h3 class="text-center">Recommended books</h3>
         <hr />
-        <div class="owl-carousel recommended-books">
+        <div class="owl-carousel recommended-books d-flex justify-content-around">
             @foreach (var book in Model.RecommendedBooks)
             {
                 <div class="card" style="width: 18rem;">
@@ -307,10 +307,22 @@
             });
 
             //carusel recommended books
-            $(".recommended-books").owlCarousel({
+            var carusel = $(".recommended-books").owlCarousel({
                 loop: true,
                 items: 4,
-                slideBy: 4
+                slideBy: 4,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    600: {
+                        items: 2,
+                    },
+                    1000: {
+                        items: 4,
+                    }
+                }
             });
 
             //rating stars
