@@ -14,10 +14,14 @@
         }
     })
 
-    $.ajax({
-        url: "/favorite/favcount",
-        success: function (res) {
-            $("#favorites-count").text(res);
-        }
-    })
+    function calculateCount() {
+        $.ajax({
+            url: "/favorite/favcount",
+            success: function (res) {
+                $("#favorites-count").text(res);
+            }
+        })
+    }
+
+    calculateCount();
 })

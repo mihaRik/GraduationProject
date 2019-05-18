@@ -46,7 +46,13 @@ namespace BookStore.Controllers
 
         public async Task<IActionResult> About()
         {
-            return View(await _db.Banners.FirstOrDefaultAsync());
+            var model = new HomeAboutViewModel
+            {
+                Banner = await _db.Banners.FirstOrDefaultAsync(),
+                About = await _db.Abouts.FirstOrDefaultAsync()
+            };
+
+            return View(model);
         }
 
         public async Task<IActionResult> Contact()

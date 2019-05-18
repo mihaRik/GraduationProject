@@ -1,0 +1,28 @@
+﻿@model BookStore.Models.ViewModels.Banner
+@{
+    ViewData["Title"] = "Banner";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles{
+    <style>
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+    <partial name="_BackgroundImageStylesPartial" model="Model" />
+}
+
+<h2>
+    This banner your guests see in site.
+    <a asp-controller="staticcontent" asp-action="banneredit" class="float-right clearfix btn btn-outline-primary">Edit</a>
+</h2>
+
+@*banner section start*@
+<div class="row" id="background-img"></div>
+@*banner section end*@
+
+

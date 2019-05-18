@@ -83,7 +83,7 @@
     <div class="col-sm-12">
         <div class="row my-3">
             <div class="col-sm-4">
-                <div class="owl-carousel book-images">
+                <div class="owl-carousel owl-theme book-images">
                     @foreach (var img in Model.Book.Images)
                     {
                         <div class="item">
@@ -226,11 +226,11 @@
 @*book details end*@
 
 @*similar books start*@
-<div class="row mt-5">
+<div class="row mt-5 mb-3">
     <div class="col-sm-12">
         <h3 class="text-center">Recommended books</h3>
         <hr />
-        <div class="owl-carousel recommended-books d-flex justify-content-around">
+        <div class="owl-carousel recommended-books owl-theme">
             @foreach (var book in Model.RecommendedBooks)
             {
                 <div class="card" style="width: 18rem;">
@@ -259,6 +259,17 @@
     <script src="~/lib/owl/dist/owl.carousel.min.js"></script>
     <script>
         $(document).ready(function () {
+
+            //calculate fav count func
+            function calculateCount() {
+                $.ajax({
+                    url: "/favorite/favcount",
+                    success: function (res) {
+                        $("#favorites-count").text(res);
+                    }
+                })
+            }
+
             //add to favorites
             $(document).on("click", "#add-to-favorites i", function () {
                 $("#favorites-loader").show();
@@ -267,6 +278,7 @@
                     url: "/favorite/addtofavorites",
                     data: { bookId: @Model.Book.Id},
                     success: function (res) {
+                        calculateCount();//favorites count
                         swal(res.data, "", { icon: res.icon });
                         $("#favorites-loader").hide();
                     }
@@ -281,8 +293,7 @@
                     url: "/favorite/removefromfavorites",
                     data: { bookId: @Model.Book.Id},
                     success: function (res) {
-                        console.log("ffrf");
-                        console.log(res);
+                        calculateCount(); //favorites count
                         swal(res.data, "", { icon: res.icon });
                         $("#favorites-loader").hide();
                     }
@@ -311,7 +322,7 @@
                 loop: true,
                 items: 4,
                 slideBy: 4,
-                responsiveClass: true,
+                //responsiveClass: true,
                 responsive: {
                     0: {
                         items: 1,

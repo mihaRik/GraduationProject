@@ -1,0 +1,107 @@
+﻿@model About
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles{
+    <style>
+        .overlay {
+            opacity: 0;
+            transition: all .3s ease-in-out;
+            background: rgba(0,0,0,.5);
+            border-radius: 5px;
+        }
+
+            .overlay i {
+                font-size: 60px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                cursor: pointer;
+            }
+
+        .img-container:hover .overlay {
+            display: block;
+            opacity: 1;
+        }
+
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+}
+
+<h2>Edit</h2>
+
+<form method="post" enctype="multipart/form-data" class="w-100">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row mb-4">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="Title"></label>
+                <input type="text" asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" id="description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="img-container">
+                <div class="position-relative">
+                    <div class="overlay w-100 h-100 position-absolute">
+                        <i class="far fa-edit text-primary p-2 rounded" style="background-color: rgba(255, 255, 255, .5);"></i>
+                    </div>
+                    <img src="@Model.Image" style="object-fit: contain; width: 100%;" id="about-page-image"
+                         class="img-thumbnail" />
+                </div>
+            </div>
+        </div>
+        <input type="submit" value="Save changes" class="btn btn-outline-success ml-auto mr-3 mt-3" />
+        <input type="file" asp-for="Photo" accept="image/*" class="d-none" id="image-input" />
+    </div>
+</form>
+
+@section scripts{
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.1.0/classic/ckeditor.js"></script>
+    <script>
+        $(document).ready(function () {
+            //editor
+            ClassicEditor
+                .create(document.querySelector('#description'))
+                .catch(error => {
+                    console.error(error);
+                });
+
+            //image hover
+            $(document).on("click", ".img-container i", function () {
+                $("#image-input").trigger("click");
+            })
+
+            //preview image
+            $("#image-input").change(function () {
+                readURL(this);
+            });
+
+            //preview image function
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#about-page-image').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        })
+    </script>
+}

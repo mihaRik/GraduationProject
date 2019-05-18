@@ -31,10 +31,18 @@ namespace BookStore.Controllers
 
             if (book == null) return NotFound();
 
+            var rnd = new Random();
+
+            var length = book.Categories
+                             .ToList()[0]
+                             .Category.Books
+                             .Count() - 1; //dont count this book
+
             var recommendedBook = book.Categories.ToList()[0]
                                        .Category.Books
                                        .Select(b => b.Book)
                                        .Where(b => b.Id != book.Id)
+                                       .Skip(rnd.Next(0, length - 12 < 0 ? 0 : length - 12))
                                        .Take(12);
 
             var canAddToFavorites = false;

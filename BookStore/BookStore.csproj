@@ -38,6 +38,8 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="wwwroot\images\about\" />
+    <Folder Include="wwwroot\images\banner\" />
     <Folder Include="wwwroot\images\profile\" />
   </ItemGroup>
 

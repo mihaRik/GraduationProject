@@ -1,0 +1,96 @@
+﻿@model BookStore.Models.ViewModels.Banner
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles{
+    <style>
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #banner-title {
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+        }
+
+        #editable-title {
+            transition: all .3s ease-in-out;
+        }
+
+            #editable-title:hover {
+                border: 1px solid white;
+                border-radius: 5px;
+            }
+    </style>
+}
+
+
+<h2>Edit</h2>
+<form method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="image-container position-relative">
+                <img src="@Model.Image" class="img-thumbnail" id="banner-image-preview" />
+                <div class="form-group position-absolute" id="banner-title">
+                    <input type="text" asp-for="Title" class="form-control" id="title-input" style="display: none;" />
+                    <p class="text-white p-2" id="editable-title" style="font-size: 25px;">@Model.Title</p>
+                </div>
+                <i class="far fa-edit text-primary p-2 rounded position-absolute"
+                   style="background-color: rgba(255, 255, 255, .5); top: 25px; right: 40px; cursor: pointer;" id="edit-image"></i>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" asp-for="Photo" accept="image/*" class="d-none" id="image-input" />
+    <input type="submit" class="btn btn-outline-success mt-3 float-right clearfix" />
+</form>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(document).on("click", "#editable-title", function () {
+                $(this).hide();
+                $("#title-input").show();
+            })
+
+            $(document).on("keypress", "#title-input", function (e) {
+                if (e.keyCode === 13) {
+                    console.log($("#title-input").val());
+                    $("#editable-title").text($("#title-input").val());
+                    $("#editable-title").show();
+                    $("#title-input").hide();
+                    e.preventDefault();
+                }
+            })
+
+            //preview image
+            $("#image-input").change(function () {
+                readURL(this);
+            });
+
+            //preview image function
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#banner-image-preview').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            //image selector
+            $(document).on("click", "#edit-image", function () {
+                $("#image-input").trigger("click");
+            })
+        })
+    </script>
+}

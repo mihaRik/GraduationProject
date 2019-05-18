@@ -6,17 +6,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookStore.Models.ViewModels
+namespace BookStore.Models
 {
-    public class Banner
+    public class About
     {
         public int Id { get; set; }
 
-        [StringLength(300)]
-        public string Image { get; set; }
-
-        [StringLength(300), Required]
+        [Required, StringLength(150)]
         public string Title { get; set; }
+
+        [Required]
+        public string Description { get; set; }
+
+        public string Image { get; set; }
 
         [NotMapped]
         public IFormFile Photo { get; set; }

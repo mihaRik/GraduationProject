@@ -1,10 +1,10 @@
-﻿@model Banner
+﻿@model HomeAboutViewModel
 @{
     ViewData["Title"] = "About";
 }
 
 @section styles{
-    <partial name="_BackgroundImageStylesPartial" model="Model" />
+    <partial name="_BackgroundImageStylesPartial" model="Model.Banner" />
 }
 
 @*banner section start*@
@@ -14,11 +14,10 @@
 @*<h3>@ViewData["Message"]</h3>*@
 <div class="row mb-4">
     <div class="col-sm-6 mb-3">
-        <h2>@ViewData["Title"]</h2>
-        <p>This is a final project for Code Academy.</p>
-        <p>The aim was to create book recommendation site where user can find his most favorite book to read.</p>
+        <h2>@Model.About.Title</h2>
+        @Html.Raw(Model.About.Description)
     </div>
     <div class="col-sm-6">
-        <img src="~/images/ProjectManagement-1.jpg" class="img-thumbnail" />
+        <img src="@Model.About.Image" class="img-thumbnail" />
     </div>
 </div>

@@ -1,0 +1,30 @@
+﻿@model About
+@{
+    ViewData["Title"] = "About";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section styles{
+    <style>
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+}
+
+<h3 class="mb-3">
+    This is your content in About page
+    <a asp-controller="staticcontent" asp-action="aboutedit" class="float-right clearfix btn btn-outline-primary">Edit</a>
+</h3>
+<div class="row mb-4 mt-2">
+    <div class="col-sm-6 mb-3">
+        <h2>@Model.Title</h2>
+        @Html.Raw(Model.Description)
+    </div>
+    <div class="col-sm-6">
+        <img src="@Model.Image" class="img-thumbnail" />
+    </div>
+</div>
