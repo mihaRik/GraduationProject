@@ -1,8 +1,103 @@
 ﻿
+@model BookStore.Models.ViewModels.AdminDashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <h2>Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-sm-6 mb-3">
+        <div class="border rounded p-3">
+            <h3>Last 5 registered users</h3>
+            <div class="ui middle aligned selection list">
+                @foreach (var user in Model.Users)
+                {
+                    <div class="item">
+                        <img class="ui avatar image" src="@(user.Image ?? "/images/no-image.png")">
+                        <div class="content">
+                            <div class="header">@user.Email</div>
+                            <div class="description">@user.Fullname</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 mb-3">
+        <div class="border rounded p-3">
+            <h3>Last 5 added books</h3>
+            <div class="ui middle aligned selection list">
+                @foreach (var book in Model.LastFiveAddedBooks)
+                {
+                    <div class="item">
+                        <div class="right floated content">
+                            <a href="/book/details/@book.Id"><div class="ui button">See details</div></a>
+                        </div>
+                        <img class="ui avatar image" src="@book.DefaultImage">
+                        <div class="content">
+                            <div class="header">@(book.Title.Length > 35 ? book.Title.Substring(0, 35) + "..." : book.Title)</div>
+                            <div class="description">@book.CreatedAt</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-sm-6 mb-3">
+        <div class="border rounded p-3">
+            <h3>Last 5 added comments</h3>
+            <div class="ui middle aligned selection list">
+                @foreach (var comment in Model.LastFiveComments)
+                {
+                    <div class="item">
+                        <div class="right floated content">
+                            <a href="/book/details/@comment.BookId"><div class="ui button">See comment</div></a>
+                        </div>
+                        <img class="ui avatar image" src="@(comment.User.Image ?? "/images/no-image.png")">
+                        <div class="content">
+                            <div class="header">@(comment.Content.Length > 35 ? comment.Content.Substring(0, 35) + "..." : comment.Content)</div>
+                            <div class="description">@comment.User.UserName | @comment.PublishAt.ToShortDateString()</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 mb-3">
+        <div class="border rounded p-3">
+            <h3>Last 5 rated books</h3>
+            <div class="ui middle aligned selection list">
+                @foreach (var book in Model.LastFiveRatedBooks)
+                {
+                    <div class="item">
+                        <div class="right floated content">
+                            <a href="/book/details/@book.Id"><div class="ui button">See details</div></a>
+                        </div>
+                        <img class="ui avatar image" src="@(book.DefaultImage)">
+                        <div class="content">
+                            <div class="header">@(book.Title.Length > 35 ? book.Title.Substring(0, 35) + "..." : book.Title)</div>
+                            <div class="description">
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    if (i < book.Rating.OrderByDescending(r => r.Id).FirstOrDefault().RatingValue)
+                                    {
+                                        <span style="font-size: 10px; color: #FFC058;"><i class="fas fa-star"></i></span>
+                                    }
+                                    else
+                                    {
+                                        <span style="font-size: 10px; color: lightgray;"><i class="fas fa-star"></i></span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 

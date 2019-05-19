@@ -98,7 +98,6 @@ namespace BookStore.Areas.Admin.Controllers
                 Delete(_env.WebRootPath + bannerFormDb.Image);
 
                 bannerFormDb.Image = await banner.Photo.SavePhotoAsync(_env.WebRootPath, "banner");
-                bannerFormDb.Image = bannerFormDb.Image.Replace(Convert.ToChar(@"\"), '/');
             }
 
             bannerFormDb.Title = banner.Title;
