@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using BookStore.Extensions;
 using static BookStore.Utility.DeleteFile;
 using BookStore.Models.ViewModels;
+using System.IO;
 
 namespace BookStore.Areas.Admin.Controllers
 {
@@ -54,7 +55,7 @@ namespace BookStore.Areas.Admin.Controllers
                     return View(aboutFromDb);
                 }
 
-                Delete(_env.WebRootPath + aboutFromDb.Image);
+                Delete(Path.Combine(_env.WebRootPath, aboutFromDb.Image));
 
                 aboutFromDb.Image = await about.Photo.SavePhotoAsync(_env.WebRootPath, "about");
             }
@@ -95,9 +96,10 @@ namespace BookStore.Areas.Admin.Controllers
                     return View(bannerFormDb);
                 }
 
-                Delete(_env.WebRootPath + bannerFormDb.Image);
+                Delete(Path.Combine(_env.WebRootPath, bannerFormDb.Image));
 
                 bannerFormDb.Image = await banner.Photo.SavePhotoAsync(_env.WebRootPath, "banner");
+                bannerFormDb.Image = bannerFormDb.Image.Replace(Convert.ToChar(@"\"), Convert.ToChar("/"));
             }
 
             bannerFormDb.Title = banner.Title;
