@@ -55,7 +55,7 @@ namespace BookStore.Areas.Admin.Controllers
                     return View(aboutFromDb);
                 }
 
-                Delete(Path.Combine(_env.WebRootPath, aboutFromDb.Image));
+                Delete(_env.WebRootPath + aboutFromDb.Image);
 
                 aboutFromDb.Image = await about.Photo.SavePhotoAsync(_env.WebRootPath, "about");
             }
@@ -96,7 +96,7 @@ namespace BookStore.Areas.Admin.Controllers
                     return View(bannerFormDb);
                 }
 
-                Delete(Path.Combine(_env.WebRootPath, bannerFormDb.Image));
+                Delete(_env.WebRootPath + bannerFormDb.Image);
 
                 bannerFormDb.Image = await banner.Photo.SavePhotoAsync(_env.WebRootPath, "banner");
                 bannerFormDb.Image = bannerFormDb.Image.Replace(Convert.ToChar(@"\"), Convert.ToChar("/"));
