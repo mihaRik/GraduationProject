@@ -27,17 +27,6 @@ namespace BookStore.Controllers
         {
             await CheckDbBook(q);
 
-            var equalBooks = _db.Books.GroupBy(b => b.GID).Where(b => b.Count() > 1);
-
-            foreach (var group in equalBooks)
-            {
-                for (int i = 0; i < group.Count() - 1; i++)
-                {
-                    _db.Entry(group.ElementAtOrDefault(i)).State = EntityState.Deleted;
-                }
-                await _db.SaveChangesAsync();
-            }
-
             var nullCat = _db.Books.Where(b => b.Categories.Count == 0);
 
             foreach (var book in nullCat)
